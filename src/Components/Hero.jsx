@@ -5,8 +5,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const BG_IMAGE = "/Images/background-image.png";
-const BUILDING_IMAGE = "/Images/building iamge.png";
+const BG_IMAGE = "/Images/background-image.webp";
+const BUILDING_IMAGE = "/Images/building iamge.webp";
 const CLOUD_IMAGE = "/Images/cloud.webp";
 const SMOKE_IMAGE = "/Images/smoke.webp";
 
