@@ -935,26 +935,26 @@ export default function AboutSection() {
         {/* ════════════════════════════════════════════════════════════════ */}
         <div
           ref={optionsPanelRef}
-          className="relative w-screen h-full h-[100dvh] flex flex-col items-center justify-center px-4 xs:px-6 sm:px-14 lg:px-24 xl:px-32 py-8 xs:py-10 sm:py-14 lg:py-16 bg-[#f4f3ef] text-[#17171a] shrink-0 select-none overflow-hidden"
+          className="relative w-screen h-full h-[100dvh] flex flex-col items-center justify-center px-4 xs:px-6 sm:px-14 lg:px-24 xl:px-32 py-5 xs:py-7 sm:py-10 lg:py-12 bg-[#f4f3ef] text-[#17171a] shrink-0 select-none overflow-hidden"
         >
           <div
             ref={optionsListRef}
-            className="w-full max-w-[92vw] xs:max-w-[90vw] sm:max-w-xl lg:max-w-5xl xl:max-w-6xl 2xl:max-w-7xl mx-auto flex flex-col justify-center my-auto will-change-transform"
+            className="w-full max-w-[92vw] xs:max-w-[90vw] sm:max-w-xl lg:max-w-5xl xl:max-w-6xl 2xl:max-w-7xl mx-auto flex flex-col justify-between h-[84vh] xs:h-[86vh] lg:h-[82vh] max-h-[800px] my-auto will-change-transform"
           >
             {REAL_ESTATE_OPTIONS.map((item, index) => (
               <div
                 key={item.id}
-                className={`group flex items-baseline py-3.5 xs:py-4 sm:py-5 md:py-5.5 lg:py-6.5 xl:py-7 border-t border-[#17171a]/15 cursor-pointer transition-colors duration-300 hover:bg-[#17171a]/[0.02] w-full ${
+                className={`group flex items-center py-2 xs:py-2.5 sm:py-3.5 md:py-4 lg:py-4.5 border-t border-[#17171a]/15 cursor-pointer transition-colors duration-300 hover:bg-[#17171a]/[0.02] w-full flex-1 ${
                   index === REAL_ESTATE_OPTIONS.length - 1 ? "border-b" : ""
                 }`}
               >
                 {/* Index Number */}
-                <span className="w-10 xs:w-12 sm:w-16 lg:w-24 text-xs xs:text-sm sm:text-base font-mono font-medium text-[#17171a]/50 group-hover:text-[#9e7d3b] transition-colors duration-200 shrink-0">
+                <span className="w-8 xs:w-10 sm:w-16 lg:w-24 text-[10.5px] xs:text-xs sm:text-base font-mono font-medium text-[#17171a]/50 group-hover:text-[#9e7d3b] transition-colors duration-200 shrink-0">
                   {item.id}
                 </span>
 
                 {/* Option Title */}
-                <span className="text-[1.42rem] xs:text-[1.68rem] sm:text-3xl md:text-4xl lg:text-[3rem] xl:text-[3.6rem] 2xl:text-[4.2rem] font-serif uppercase tracking-[0.02em] text-[#17171a] font-normal leading-tight group-hover:translate-x-3 sm:group-hover:translate-x-6 group-hover:text-[#9e7d3b] transition-all duration-300 flex-1">
+                <span className="text-[1.25rem] xs:text-[1.45rem] sm:text-2xl md:text-3xl lg:text-[2.85rem] xl:text-[3.4rem] 2xl:text-[3.8rem] font-serif uppercase tracking-[0.02em] text-[#17171a] font-normal leading-none group-hover:translate-x-2 sm:group-hover:translate-x-6 group-hover:text-[#9e7d3b] transition-all duration-300 flex-1 truncate xs:whitespace-normal">
                   {item.label}
                 </span>
               </div>

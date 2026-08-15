@@ -180,13 +180,13 @@ export default function Testimonials() {
           </h2>
         </div>
 
-        {/* ── 2-Column Responsive Editorial Grid ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 xs:gap-8 sm:gap-12 lg:gap-16 xl:gap-24 items-stretch w-full">
+        {/* ── 2-Column Responsive Editorial Grid (Reshaped as unified luxury card on mobile, side-by-side on desktop) ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 xs:gap-7 sm:gap-10 lg:gap-16 xl:gap-24 items-stretch w-full max-w-lg lg:max-w-none mx-auto">
           
-          {/* Left Column: Responsive Lifestyle Photography */}
+          {/* Left Column: Lifestyle Photography (Responsive Banner on Mobile, Full Column on Desktop) */}
           <div
             ref={photoCardRef}
-            className="lg:col-span-6 relative w-full h-[220px] xs:h-[260px] sm:h-[380px] lg:h-[500px] xl:h-[540px] rounded-xl sm:rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(23,23,26,0.12)] border border-[#17171a]/10 bg-[#e5e3dc] will-change-transform"
+            className="lg:col-span-6 relative w-full h-[180px] xs:h-[210px] sm:h-[320px] lg:h-[500px] xl:h-[540px] rounded-xl sm:rounded-2xl overflow-hidden shadow-[0_16px_40px_rgba(23,23,26,0.1)] border border-[#17171a]/10 bg-[#e5e3dc] will-change-transform"
           >
             <img
               ref={photoImgRef}
@@ -194,32 +194,32 @@ export default function Testimonials() {
               alt={activeTestimonial.client}
               className="w-full h-full object-cover object-center filter brightness-[0.98] will-change-transform"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent pointer-events-none" />
             
             {/* Elegant Tag on Photo */}
-            <div className="absolute bottom-2.5 xs:bottom-4 left-2.5 xs:left-4 z-10">
-              <span className="text-[8px] xs:text-[9px] sm:text-[11px] font-sans tracking-wider xs:tracking-widest text-[#c9a96e] uppercase bg-[#17171a]/95 backdrop-blur-md px-2 xs:px-3.5 py-0.5 xs:py-1.5 rounded border border-[#c9a96e]/30 shadow-lg font-medium">
+            <div className="absolute bottom-2.5 xs:bottom-3.5 left-2.5 xs:left-3.5 z-10">
+              <span className="text-[8px] xs:text-[9px] sm:text-[11px] font-sans tracking-wider xs:tracking-widest text-[#c9a96e] uppercase bg-[#17171a]/95 backdrop-blur-md px-2 xs:px-3 py-0.5 xs:py-1 rounded border border-[#c9a96e]/30 shadow-lg font-medium">
                 {activeTestimonial.location}
               </span>
             </div>
           </div>
 
-          {/* Right Column: Responsive Quote Box */}
+          {/* Right Column: Quote Box (Harmonized spacing on mobile, full editorial height on desktop) */}
           <div
             ref={quoteCardRef}
-            className="lg:col-span-6 flex flex-col justify-between py-1 sm:py-2 w-full will-change-transform"
+            className="lg:col-span-6 flex flex-col justify-between py-1 sm:py-2 w-full will-change-transform bg-white/40 lg:bg-transparent p-4 xs:p-5 sm:p-7 lg:p-0 rounded-xl sm:rounded-2xl lg:rounded-none border border-[#17171a]/10 lg:border-none shadow-sm lg:shadow-none"
           >
             {/* Top Divider with Number Pills & Quotation Mark */}
             <div>
-              <div className="border-t border-[#17171a]/20 pt-3.5 xs:pt-5 sm:pt-7 flex items-center justify-between w-full">
+              <div className="border-t border-[#17171a]/15 lg:border-[#17171a]/20 pt-2.5 xs:pt-3.5 sm:pt-6 lg:pt-7 flex items-center justify-between w-full">
                 {/* Number Pills: (1) (2) (3) (4) (5) */}
-                <div className="flex items-center space-x-1.5 xs:space-x-2.5 sm:space-x-3.5">
+                <div className="flex items-center space-x-1.5 xs:space-x-2 sm:space-x-3.5">
                   {TESTIMONIALS.map((item, idx) => (
                     <button
                       key={item.id}
                       onClick={() => handleSelect(idx)}
                       aria-label={`View testimonial ${item.id}`}
-                      className={`w-6.5 h-6.5 xs:w-8 xs:h-8 sm:w-9 sm:h-9 rounded-full text-[11px] xs:text-xs sm:text-sm font-sans flex items-center justify-center transition-all duration-200 cursor-pointer ${
+                      className={`w-6.5 h-6.5 xs:w-7.5 xs:h-7.5 sm:w-9 sm:h-9 rounded-full text-[11px] xs:text-xs sm:text-sm font-sans flex items-center justify-center transition-all duration-200 cursor-pointer ${
                         currentIndex === idx
                           ? "bg-[#17171a] text-white border-2 border-[#17171a] font-bold shadow-md scale-105"
                           : "bg-transparent text-[#17171a]/60 border border-[#17171a]/25 hover:border-[#17171a] hover:text-[#17171a]"
@@ -231,16 +231,16 @@ export default function Testimonials() {
                 </div>
 
                 {/* Quotation Mark */}
-                <div className="text-2xl xs:text-3xl sm:text-5xl font-sans text-[#17171a] leading-none select-none font-black opacity-85">
+                <div className="text-xl xs:text-2xl sm:text-5xl font-sans text-[#17171a] leading-none select-none font-black opacity-85">
                   &rdquo;
                 </div>
               </div>
 
               {/* Large Editorial Quote in Fira Sans */}
-              <div className="mt-4 xs:mt-6 sm:mt-10 lg:mt-14 mb-4 xs:mb-6 sm:mb-12 min-h-[90px] xs:min-h-[115px] sm:min-h-[180px] flex items-center">
+              <div className="my-3 xs:my-4 sm:my-8 lg:mt-14 lg:mb-12 min-h-[75px] xs:min-h-[90px] sm:min-h-[160px] flex items-center">
                 <p
                   ref={quoteTextRef}
-                  className="text-[1.05rem] xs:text-[1.25rem] sm:text-2xl lg:text-[2.1rem] xl:text-[2.45rem] font-sans font-normal leading-[1.42] sm:leading-[1.42] text-[#17171a] tracking-tight will-change-transform"
+                  className="text-[0.98rem] xs:text-[1.12rem] sm:text-xl lg:text-[2.1rem] xl:text-[2.45rem] font-sans font-normal leading-[1.42] text-[#17171a] tracking-tight will-change-transform"
                 >
                   &ldquo;{activeTestimonial.quote}&rdquo;
                 </p>
@@ -248,32 +248,32 @@ export default function Testimonials() {
             </div>
 
             {/* Bottom Row: Author & Rating with Navigation Controls */}
-            <div className="pt-3.5 xs:pt-5 sm:pt-6 border-t border-[#17171a]/15 flex flex-row items-center justify-between gap-2 w-full">
-              <div className="flex flex-wrap items-center gap-1.5 xs:gap-2.5 sm:gap-3 text-[10px] xs:text-xs sm:text-sm font-sans tracking-wider sm:tracking-widest text-[#17171a] font-bold uppercase">
+            <div className="pt-2.5 xs:pt-3.5 sm:pt-5 lg:pt-6 border-t border-[#17171a]/15 flex flex-row items-center justify-between gap-2 w-full">
+              <div className="flex flex-wrap items-center gap-1 xs:gap-2 sm:gap-3 text-[9.5px] xs:text-[11px] sm:text-sm font-sans tracking-wider sm:tracking-widest text-[#17171a] font-bold uppercase">
                 <span>{activeTestimonial.client}</span>
                 <span className="text-[#17171a]/30 font-normal">/</span>
-                <span className="text-[#9e7d3b] tracking-wider text-[10px] xs:text-xs sm:text-sm font-medium">
+                <span className="text-[#9e7d3b] tracking-wider text-[9.5px] xs:text-[11px] sm:text-sm font-medium truncate max-w-[130px] xs:max-w-none">
                   {activeTestimonial.role}
                 </span>
-                <span className="text-[#17171a]/30 font-normal">/</span>
-                <div className="flex items-center text-[#c9a96e] text-xs xs:text-sm sm:text-base tracking-widest">
+                <span className="text-[#17171a]/30 font-normal hidden xs:inline">/</span>
+                <div className="flex items-center text-[#c9a96e] text-[10px] xs:text-xs sm:text-base tracking-widest">
                   {"★".repeat(activeTestimonial.rating)}
                 </div>
               </div>
 
               {/* Prev / Next Navigation Arrows */}
-              <div className="flex items-center space-x-1.5 xs:space-x-2.5 shrink-0">
+              <div className="flex items-center space-x-1.5 xs:space-x-2 shrink-0">
                 <button
                   onClick={handlePrev}
                   aria-label="Previous testimonial"
-                  className="w-7.5 h-7.5 xs:w-9 xs:h-9 sm:w-10 sm:h-10 rounded-full border border-[#17171a]/25 flex items-center justify-center text-xs xs:text-sm text-[#17171a] hover:bg-[#17171a] hover:text-white transition-colors duration-200 cursor-pointer"
+                  className="w-7 h-7 xs:w-8 xs:h-8 sm:w-10 sm:h-10 rounded-full border border-[#17171a]/25 flex items-center justify-center text-xs xs:text-sm text-[#17171a] hover:bg-[#17171a] hover:text-white transition-colors duration-200 cursor-pointer"
                 >
                   ←
                 </button>
                 <button
                   onClick={handleNext}
                   aria-label="Next testimonial"
-                  className="w-7.5 h-7.5 xs:w-9 xs:h-9 sm:w-10 sm:h-10 rounded-full border border-[#17171a]/25 flex items-center justify-center text-xs xs:text-sm text-[#17171a] hover:bg-[#17171a] hover:text-white transition-colors duration-200 cursor-pointer"
+                  className="w-7 h-7 xs:w-8 xs:h-8 sm:w-10 sm:h-10 rounded-full border border-[#17171a]/25 flex items-center justify-center text-xs xs:text-sm text-[#17171a] hover:bg-[#17171a] hover:text-white transition-colors duration-200 cursor-pointer"
                 >
                   →
                 </button>
