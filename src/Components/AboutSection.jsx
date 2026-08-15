@@ -89,6 +89,11 @@ export default function AboutSection() {
       if (!section || !track) return;
 
       const getScrollAmount = () => track.scrollWidth - window.innerWidth;
+      const isMobile = window.innerWidth < 1024;
+      const getScrollDistance = () => {
+        const amount = getScrollAmount();
+        return window.innerWidth < 1024 ? amount * 2.2 : amount * 1.35;
+      };
 
       // ── 1. Main Foreground Horizontal Pin & Master Scroll Tween ──
       const scrollTween = gsap.to(track, {
@@ -97,9 +102,9 @@ export default function AboutSection() {
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: () => `+=${getScrollAmount() * 1.25}`,
+          end: () => `+=${getScrollDistance()}`,
           pin: true,
-          scrub: 1,
+          scrub: isMobile ? 0.5 : 1,
           anticipatePin: 1,
           invalidateOnRefresh: true,
         },
@@ -113,8 +118,8 @@ export default function AboutSection() {
           scrollTrigger: {
             trigger: section,
             start: "top top",
-            end: () => `+=${getScrollAmount() * 1.25}`,
-            scrub: 1,
+            end: () => `+=${getScrollDistance()}`,
+            scrub: isMobile ? 0.5 : 1,
           },
         });
       }
@@ -524,7 +529,7 @@ export default function AboutSection() {
 
           if (deltaX !== 0) {
             window.scrollBy({
-              top: deltaX * 1.5,
+              top: deltaX * 1.0,
               behavior: "instant",
             });
           }
@@ -535,7 +540,7 @@ export default function AboutSection() {
         // Translate horizontal trackpad swipes (deltaX) into vertical scroll for horizontal pin
         if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 1) {
           window.scrollBy({
-            top: e.deltaX * 1.2,
+            top: e.deltaX * 1.0,
             behavior: "instant",
           });
         }
