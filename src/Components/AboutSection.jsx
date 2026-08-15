@@ -935,7 +935,7 @@ export default function AboutSection() {
         {/* ════════════════════════════════════════════════════════════════ */}
         <div
           ref={optionsPanelRef}
-          className="relative w-screen h-full h-[100dvh] flex flex-col items-center justify-center px-4 xs:px-6 sm:px-14 lg:px-24 xl:px-32 py-6 sm:py-10 lg:py-12 bg-[#f4f3ef] text-[#17171a] shrink-0 select-none overflow-hidden"
+          className="relative w-screen h-full h-[100dvh] flex flex-col items-center justify-center px-4 xs:px-6 sm:px-14 lg:px-24 xl:px-32 py-8 xs:py-10 sm:py-14 lg:py-16 bg-[#f4f3ef] text-[#17171a] shrink-0 select-none overflow-hidden"
         >
           <div
             ref={optionsListRef}
@@ -944,12 +944,12 @@ export default function AboutSection() {
             {REAL_ESTATE_OPTIONS.map((item, index) => (
               <div
                 key={item.id}
-                className={`group flex items-baseline py-2 xs:py-2.5 sm:py-3 lg:py-3.5 xl:py-4 border-t border-[#17171a]/15 cursor-pointer transition-colors duration-300 hover:bg-[#17171a]/[0.02] w-full ${
+                className={`group flex items-baseline py-3.5 xs:py-4 sm:py-5 md:py-5.5 lg:py-6.5 xl:py-7 border-t border-[#17171a]/15 cursor-pointer transition-colors duration-300 hover:bg-[#17171a]/[0.02] w-full ${
                   index === REAL_ESTATE_OPTIONS.length - 1 ? "border-b" : ""
                 }`}
               >
                 {/* Index Number */}
-                <span className="w-8 xs:w-9 sm:w-12 lg:w-20 text-xs xs:text-sm sm:text-base font-mono font-medium text-[#17171a]/50 group-hover:text-[#9e7d3b] transition-colors duration-200 shrink-0">
+                <span className="w-10 xs:w-12 sm:w-16 lg:w-24 text-xs xs:text-sm sm:text-base font-mono font-medium text-[#17171a]/50 group-hover:text-[#9e7d3b] transition-colors duration-200 shrink-0">
                   {item.id}
                 </span>
 
