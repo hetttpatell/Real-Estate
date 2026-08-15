@@ -122,7 +122,7 @@ export default function InquirySection() {
     <section
       ref={sectionRef}
       id="inquiry"
-      className="relative w-full min-h-screen min-h-[100dvh] flex flex-col justify-center items-center bg-[#17171a] text-white py-24 sm:py-32 lg:py-40 px-6 xs:px-10 sm:px-16 lg:px-24 select-none overflow-hidden font-sans border-t border-[#c9a96e]/20"
+      className="relative w-full min-h-screen min-h-[100dvh] flex flex-col justify-center items-center bg-[#17171a] text-white py-14 xs:py-20 sm:py-32 lg:py-40 px-4 xs:px-6 sm:px-16 lg:px-24 select-none overflow-hidden font-sans border-t border-[#c9a96e]/20"
     >
       {/* Background Architectural Ambient Glow & Grid Pattern */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(201,169,110,0.06),transparent_65%)] pointer-events-none" />
@@ -133,19 +133,19 @@ export default function InquirySection() {
         {/* ── 1. Brand Eyebrow Tag ── */}
         <div
           ref={eyebrowRef}
-          className="flex items-center justify-center space-x-3 mb-4 sm:mb-5 will-change-transform"
+          className="flex items-center justify-center space-x-2.5 xs:space-x-3 mb-3.5 xs:mb-4 sm:mb-5 will-change-transform px-2"
         >
-          <span className="w-8 sm:w-12 h-[2px] bg-[#c9a96e]" />
-          <span className="text-[10px] sm:text-xs font-sans tracking-[0.35em] text-[#c9a96e] uppercase font-bold">
+          <span className="w-5 xs:w-8 sm:w-12 h-[2px] bg-[#c9a96e]" />
+          <span className="text-[9px] xs:text-[10px] sm:text-xs font-sans tracking-[0.24em] xs:tracking-[0.35em] text-[#c9a96e] uppercase font-bold text-center">
             FIRST KEY ESTATE &bull; PRIVATE CLIENT SERVICES
           </span>
-          <span className="w-8 sm:w-12 h-[2px] bg-[#c9a96e]" />
+          <span className="w-5 xs:w-8 sm:w-12 h-[2px] bg-[#c9a96e]" />
         </div>
 
         {/* ── 2. Grand Centered Headline ── */}
         <h2
           ref={headlineRef}
-          className="text-4xl xs:text-5xl sm:text-6xl lg:text-[4.5rem] xl:text-[5.2rem] font-serif font-normal tracking-tight leading-[1.08] text-white text-center will-change-transform max-w-4xl"
+          className="text-2xl xs:text-3xl sm:text-5xl lg:text-[4.5rem] xl:text-[5.2rem] font-serif font-normal tracking-tight leading-[1.12] sm:leading-[1.08] text-white text-center will-change-transform max-w-4xl px-2"
         >
           Join The Whispering Pines Sanctuary
         </h2>
@@ -153,10 +153,10 @@ export default function InquirySection() {
         {/* ── 3. First Key Estate Gold Emblem ── */}
         <div
           ref={keyIconRef}
-          className="my-8 sm:my-12 lg:my-14 flex items-center justify-center will-change-transform"
+          className="my-5 xs:my-8 sm:my-12 lg:my-14 flex items-center justify-center will-change-transform"
         >
           <svg
-            className="w-14 h-7 sm:w-16 sm:h-8 text-[#c9a96e]"
+            className="w-11 h-6 xs:w-13 xs:h-7 sm:w-16 sm:h-8 text-[#c9a96e]"
             viewBox="0 0 64 24"
             fill="none"
             stroke="currentColor"
@@ -176,22 +176,22 @@ export default function InquirySection() {
         </div>
 
         {/* ── 4. Main Interactive Form (Symmetrical 2-Column Luxury Grid) ── */}
-        <div className="w-full max-w-5xl mx-auto">
+        <div className="w-full max-w-5xl mx-auto px-1">
           {isSubmitted ? (
             /* Success Confirmation Screen */
-            <div className="py-14 sm:py-20 flex flex-col items-center justify-center text-center space-y-6">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-[#c9a96e] flex items-center justify-center text-[#c9a96e] text-3xl font-serif">
+            <div className="py-10 xs:py-14 sm:py-20 flex flex-col items-center justify-center text-center space-y-4 xs:space-y-6">
+              <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-full border-2 border-[#c9a96e] flex items-center justify-center text-[#c9a96e] text-2xl sm:text-3xl font-serif">
                 ✓
               </div>
-              <h3 className="text-3xl sm:text-5xl font-serif text-white tracking-tight">
+              <h3 className="text-2xl xs:text-3xl sm:text-5xl font-serif text-white tracking-tight">
                 Inquiry Successfully Registered
               </h3>
-              <p className="text-sm sm:text-base lg:text-lg text-white/80 max-w-xl mx-auto leading-relaxed">
+              <p className="text-xs xs:text-sm sm:text-base lg:text-lg text-white/80 max-w-xl mx-auto leading-relaxed">
                 Thank you, <span className="text-[#c9a96e] font-semibold">{formData.fullName}</span>. Your private dossier for The Whispering Pines has been initiated. A Senior Estate Director will connect with you via {formData.email} within 24 hours.
               </p>
               <button
                 onClick={handleReset}
-                className="mt-6 px-10 py-3.5 border border-[#c9a96e] text-xs font-mono tracking-[0.25em] uppercase text-[#c9a96e] hover:bg-[#c9a96e] hover:text-[#17171a] transition-all duration-300 cursor-pointer font-bold"
+                className="mt-4 sm:mt-6 px-8 sm:px-10 py-3 sm:py-3.5 border border-[#c9a96e] text-[10px] sm:text-xs font-mono tracking-[0.25em] uppercase text-[#c9a96e] hover:bg-[#c9a96e] hover:text-[#17171a] transition-all duration-300 cursor-pointer font-bold"
               >
                 SUBMIT ANOTHER INQUIRY
               </button>
@@ -203,11 +203,11 @@ export default function InquirySection() {
               className="w-full flex flex-col items-center"
             >
               {/* 4 Balanced Symmetrical Rows (2 Columns each) */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-14 lg:gap-x-20 xl:gap-x-28 gap-y-9 sm:gap-y-12 w-full mb-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 md:gap-x-14 lg:gap-x-20 xl:gap-x-28 gap-y-6 xs:gap-y-8 sm:gap-y-12 w-full mb-2 sm:mb-4">
                 
                 {/* ── ROW 1: FULL NAME & EMAIL ── */}
-                <div className="inquiry-field flex flex-col space-y-2 will-change-transform">
-                  <label className="text-[10px] sm:text-xs font-mono uppercase tracking-[0.25em] text-[#c9a96e] font-semibold">
+                <div className="inquiry-field flex flex-col space-y-1.5 xs:space-y-2 will-change-transform">
+                  <label className="text-[9px] xs:text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] sm:tracking-[0.25em] text-[#c9a96e] font-semibold">
                     FULL NAME *
                   </label>
                   <input
@@ -217,12 +217,12 @@ export default function InquirySection() {
                     value={formData.fullName}
                     onChange={handleChange}
                     placeholder="e.g. Eleanor Vance"
-                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2.5 sm:py-3 text-sm sm:text-base text-white outline-none transition-colors duration-300 placeholder:text-white/25"
+                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-xs xs:text-sm sm:text-base text-white outline-none transition-colors duration-300 placeholder:text-white/25"
                   />
                 </div>
 
-                <div className="inquiry-field flex flex-col space-y-2 will-change-transform">
-                  <label className="text-[10px] sm:text-xs font-mono uppercase tracking-[0.25em] text-[#c9a96e] font-semibold">
+                <div className="inquiry-field flex flex-col space-y-1.5 xs:space-y-2 will-change-transform">
+                  <label className="text-[9px] xs:text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] sm:tracking-[0.25em] text-[#c9a96e] font-semibold">
                     EMAIL ADDRESS *
                   </label>
                   <input
@@ -232,13 +232,13 @@ export default function InquirySection() {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="e.g. eleanor@vancecapital.com"
-                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2.5 sm:py-3 text-sm sm:text-base text-white outline-none transition-colors duration-300 placeholder:text-white/25"
+                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-xs xs:text-sm sm:text-base text-white outline-none transition-colors duration-300 placeholder:text-white/25"
                   />
                 </div>
 
                 {/* ── ROW 2: PHONE & RESIDENCE COLLECTION ── */}
-                <div className="inquiry-field flex flex-col space-y-2 will-change-transform">
-                  <label className="text-[10px] sm:text-xs font-mono uppercase tracking-[0.25em] text-[#c9a96e] font-semibold">
+                <div className="inquiry-field flex flex-col space-y-1.5 xs:space-y-2 will-change-transform">
+                  <label className="text-[9px] xs:text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] sm:tracking-[0.25em] text-[#c9a96e] font-semibold">
                     PHONE NUMBER
                   </label>
                   <input
@@ -247,19 +247,19 @@ export default function InquirySection() {
                     value={formData.phone}
                     onChange={handleChange}
                     placeholder="e.g. +1 (555) 019-2834"
-                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2.5 sm:py-3 text-sm sm:text-base text-white outline-none transition-colors duration-300 placeholder:text-white/25"
+                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-xs xs:text-sm sm:text-base text-white outline-none transition-colors duration-300 placeholder:text-white/25"
                   />
                 </div>
 
-                <div className="inquiry-field flex flex-col space-y-2 will-change-transform">
-                  <label className="text-[10px] sm:text-xs font-mono uppercase tracking-[0.25em] text-[#c9a96e] font-semibold">
+                <div className="inquiry-field flex flex-col space-y-1.5 xs:space-y-2 will-change-transform">
+                  <label className="text-[9px] xs:text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] sm:tracking-[0.25em] text-[#c9a96e] font-semibold">
                     RESIDENCE COLLECTION
                   </label>
                   <select
                     name="residenceType"
                     value={formData.residenceType}
                     onChange={handleChange}
-                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2.5 sm:py-3 text-sm sm:text-base text-white outline-none transition-colors duration-300 cursor-pointer [&>option]:bg-[#17171a] [&>option]:text-white"
+                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-xs xs:text-sm sm:text-base text-white outline-none transition-colors duration-300 cursor-pointer [&>option]:bg-[#17171a] [&>option]:text-white"
                   >
                     <option value="">SELECT COLLECTION...</option>
                     <option value="LUXURY VILLA">LUXURY VILLA</option>
@@ -271,15 +271,15 @@ export default function InquirySection() {
                 </div>
 
                 {/* ── ROW 3: TIMELINE & BUDGET RANGE ── */}
-                <div className="inquiry-field flex flex-col space-y-2 will-change-transform">
-                  <label className="text-[10px] sm:text-xs font-mono uppercase tracking-[0.25em] text-[#c9a96e] font-semibold">
+                <div className="inquiry-field flex flex-col space-y-1.5 xs:space-y-2 will-change-transform">
+                  <label className="text-[9px] xs:text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] sm:tracking-[0.25em] text-[#c9a96e] font-semibold">
                     INTENDED TIMELINE
                   </label>
                   <select
                     name="timeline"
                     value={formData.timeline}
                     onChange={handleChange}
-                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2.5 sm:py-3 text-sm sm:text-base text-white outline-none transition-colors duration-300 cursor-pointer [&>option]:bg-[#17171a] [&>option]:text-white"
+                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-xs xs:text-sm sm:text-base text-white outline-none transition-colors duration-300 cursor-pointer [&>option]:bg-[#17171a] [&>option]:text-white"
                   >
                     <option value="">SELECT TIMELINE...</option>
                     <option value="IMMEDIATE (MOVE-IN READY)">IMMEDIATE (MOVE-IN READY)</option>
@@ -289,15 +289,15 @@ export default function InquirySection() {
                   </select>
                 </div>
 
-                <div className="inquiry-field flex flex-col space-y-2 will-change-transform">
-                  <label className="text-[10px] sm:text-xs font-mono uppercase tracking-[0.25em] text-[#c9a96e] font-semibold">
+                <div className="inquiry-field flex flex-col space-y-1.5 xs:space-y-2 will-change-transform">
+                  <label className="text-[9px] xs:text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] sm:tracking-[0.25em] text-[#c9a96e] font-semibold">
                     INVESTMENT RANGE
                   </label>
                   <select
                     name="budgetRange"
                     value={formData.budgetRange}
                     onChange={handleChange}
-                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2.5 sm:py-3 text-sm sm:text-base text-white outline-none transition-colors duration-300 cursor-pointer [&>option]:bg-[#17171a] [&>option]:text-white"
+                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-xs xs:text-sm sm:text-base text-white outline-none transition-colors duration-300 cursor-pointer [&>option]:bg-[#17171a] [&>option]:text-white"
                   >
                     <option value="">SELECT BUDGET RANGE...</option>
                     <option value="$1.5M – $3.0M">$1,500,000 – $3,000,000</option>
@@ -308,15 +308,15 @@ export default function InquirySection() {
                 </div>
 
                 {/* ── ROW 4: CONSULTATION TYPE & BESPOKE NOTES ── */}
-                <div className="inquiry-field flex flex-col space-y-2 will-change-transform">
-                  <label className="text-[10px] sm:text-xs font-mono uppercase tracking-[0.25em] text-[#c9a96e] font-semibold">
+                <div className="inquiry-field flex flex-col space-y-1.5 xs:space-y-2 will-change-transform">
+                  <label className="text-[9px] xs:text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] sm:tracking-[0.25em] text-[#c9a96e] font-semibold">
                     PREFERRED CONSULTATION
                   </label>
                   <select
                     name="consultationType"
                     value={formData.consultationType}
                     onChange={handleChange}
-                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2.5 sm:py-3 text-sm sm:text-base text-white outline-none transition-colors duration-300 cursor-pointer [&>option]:bg-[#17171a] [&>option]:text-white"
+                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-xs xs:text-sm sm:text-base text-white outline-none transition-colors duration-300 cursor-pointer [&>option]:bg-[#17171a] [&>option]:text-white"
                   >
                     <option value="">SELECT FORMAT...</option>
                     <option value="PRIVATE ON-SITE TOUR">PRIVATE ON-SITE TOUR</option>
@@ -326,8 +326,8 @@ export default function InquirySection() {
                   </select>
                 </div>
 
-                <div className="inquiry-field flex flex-col space-y-2 will-change-transform">
-                  <label className="text-[10px] sm:text-xs font-mono uppercase tracking-[0.25em] text-[#c9a96e] font-semibold">
+                <div className="inquiry-field flex flex-col space-y-1.5 xs:space-y-2 will-change-transform">
+                  <label className="text-[9px] xs:text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] sm:tracking-[0.25em] text-[#c9a96e] font-semibold">
                     BESPOKE INQUIRY NOTES OR QUESTIONS
                   </label>
                   <input
@@ -335,8 +335,8 @@ export default function InquirySection() {
                     name="message"
                     value={formData.message}
                     onChange={handleChange}
-                    placeholder="e.g. Preferred villa layout, custom pool pavilion..."
-                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2.5 sm:py-3 text-sm sm:text-base text-white outline-none transition-colors duration-300 placeholder:text-white/25"
+                    placeholder="e.g. Preferred villa layout, pool..."
+                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-xs xs:text-sm sm:text-base text-white outline-none transition-colors duration-300 placeholder:text-white/25"
                   />
                 </div>
 
@@ -345,15 +345,15 @@ export default function InquirySection() {
               {/* ── 5. Newly Designed Clean Action Button ── */}
               <div
                 ref={buttonRef}
-                className="mt-12 sm:mt-16 lg:mt-20 flex flex-col items-center justify-center text-center w-full mx-auto will-change-transform"
+                className="mt-8 xs:mt-12 sm:mt-16 lg:mt-20 flex flex-col items-center justify-center text-center w-full mx-auto will-change-transform px-2"
               >
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-10 sm:px-16 py-3.5 sm:py-4 border border-[#c9a96e] bg-transparent text-[#c9a96e] hover:bg-[#c9a96e] hover:text-[#17171a] text-xs sm:text-sm font-sans tracking-[0.28em] uppercase transition-all duration-300 cursor-pointer disabled:opacity-50 active:scale-[0.99]"
+                  className="w-full xs:w-auto max-w-xs xs:max-w-none px-6 xs:px-10 sm:px-16 py-3.5 sm:py-4 border border-[#c9a96e] bg-transparent text-[#c9a96e] hover:bg-[#c9a96e] hover:text-[#17171a] text-[11px] xs:text-xs sm:text-sm font-sans tracking-[0.22em] xs:tracking-[0.28em] uppercase transition-all duration-300 cursor-pointer disabled:opacity-50 active:scale-[0.99]"
                 >
                   {isSubmitting ? (
-                    <span className="flex items-center gap-2.5">
+                    <span className="flex items-center justify-center gap-2.5">
                       <span className="w-3.5 h-3.5 rounded-full border-2 border-current border-t-transparent animate-spin" />
                       <span>PROCESSING INQUIRY...</span>
                     </span>
