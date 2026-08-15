@@ -100,14 +100,14 @@ export default function Loader({ onWipeStart, onWipeComplete }) {
       className="fixed inset-0 z-[9999] overflow-hidden select-none pointer-events-auto"
       id="loader"
     >
-      {/* Full-viewport solid black overlay panel */}
+      {/* Full-viewport solid dark charcoal overlay panel */}
       <div
         ref={overlayRef}
-        className="relative w-full h-full bg-black flex items-center justify-center"
+        className="relative w-full h-full bg-[#17171a] flex items-center justify-center"
         style={{ willChange: "transform" }}
       >
         {/* Centered Card with Edge Loading Border Animation */}
-        <div className="relative w-[80vw] max-w-[420px] md:w-[380px] h-[55vh] max-h-[460px] md:h-[420px] p-6 md:p-9 flex flex-col justify-between">
+        <div className="relative w-[82vw] max-w-[440px] md:w-[400px] h-[55vh] max-h-[460px] md:h-[420px] p-6 md:p-9 flex flex-col justify-between">
           {/* Animated SVG Border along card edges */}
           <svg
             className="absolute inset-0 w-full h-full pointer-events-none overflow-visible"
@@ -142,10 +142,10 @@ export default function Loader({ onWipeStart, onWipeComplete }) {
             ref={cardContentRef}
             className="relative z-10 w-full h-full flex flex-col justify-between"
           >
-            {/* Top: Logo Wordmark */}
-            <div className="flex items-center justify-between w-full pt-1">
+            {/* Top: Logo Wordmark (Enlarged and Prominent) */}
+            <div className="flex items-center justify-center w-full pt-1 text-center">
               <span
-                className="text-[10px] md:text-xs tracking-[0.35em] text-white font-medium uppercase truncate"
+                className="text-xs xs:text-sm md:text-base lg:text-lg tracking-[0.32em] md:tracking-[0.38em] text-white font-bold uppercase"
                 style={{ fontFamily: "var(--font-sans)" }}
               >
                 FIRSTKEY HOUSING
@@ -155,7 +155,7 @@ export default function Loader({ onWipeStart, onWipeComplete }) {
             {/* Bottom: Tagline */}
             <div className="flex items-center justify-center w-full pb-1">
               <span
-                className="text-[9px] md:text-[10.5px] tracking-[0.35em] text-white/80 font-light uppercase text-center"
+                className="text-[9.5px] md:text-xs tracking-[0.32em] text-[#c9a96e] font-medium uppercase text-center"
                 style={{ fontFamily: "var(--font-sans)" }}
               >
                 THE LUXURY OF EXPERIENCE
