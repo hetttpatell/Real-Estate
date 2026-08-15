@@ -129,7 +129,7 @@ export default function InquirySection() {
       <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.02)_1px,transparent_1px)] [background-size:48px_48px] pointer-events-none opacity-30" />
 
       <div className="relative z-10 w-full max-w-[1520px] mx-auto flex flex-col items-center justify-center my-auto">
-        
+
         {/* ── 1. Brand Eyebrow Tag ── */}
         <div
           ref={eyebrowRef}
@@ -175,11 +175,11 @@ export default function InquirySection() {
           </svg>
         </div>
 
-        {/* ── 4. Main Interactive Form (Symmetrical 2-Column Luxury Grid) ── */}
-        <div className="w-full max-w-5xl mx-auto px-1">
+        {/* ── 4. Main Interactive Form (Framed Luxury Card on Mobile, Open 2-Column Grid on Desktop) ── */}
+        <div className="w-full max-w-5xl mx-auto px-1 sm:px-0">
           {isSubmitted ? (
             /* Success Confirmation Screen */
-            <div className="py-10 xs:py-14 sm:py-20 flex flex-col items-center justify-center text-center space-y-4 xs:space-y-6">
+            <div className="py-10 xs:py-14 sm:py-20 flex flex-col items-center justify-center text-center space-y-4 xs:space-y-6 bg-[#1c1c20]/80 lg:bg-transparent p-6 xs:p-8 sm:p-12 rounded-2xl lg:rounded-none border border-[#c9a96e]/30 lg:border-none shadow-[0_20px_50px_rgba(0,0,0,0.5)] lg:shadow-none">
               <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-full border-2 border-[#c9a96e] flex items-center justify-center text-[#c9a96e] text-2xl sm:text-3xl font-serif">
                 ✓
               </div>
@@ -200,9 +200,12 @@ export default function InquirySection() {
             <form
               ref={formRef}
               onSubmit={handleSubmit}
-              className="w-full flex flex-col items-center"
+              className="w-full flex flex-col items-center bg-[#19191d]/85 lg:bg-transparent p-5 xs:p-7 sm:p-10 lg:p-0 rounded-2xl lg:rounded-none border border-[#c9a96e]/20 lg:border-none shadow-[0_25px_60px_rgba(0,0,0,0.55)] lg:shadow-none relative"
             >
-              {/* 4 Balanced Symmetrical Rows (2 Columns each) */}
+              {/* Top Accent Line for Mobile Card */}
+              <div className="lg:hidden absolute top-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e]/60 to-transparent" />
+
+              {/* 4 Balanced Symmetrical Rows (2 Columns each on Desktop, Grouped on Mobile) */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 md:gap-x-14 lg:gap-x-20 xl:gap-x-28 gap-y-6 xs:gap-y-8 sm:gap-y-12 w-full mb-2 sm:mb-4">
                 
                 {/* ── ROW 1: FULL NAME & EMAIL ── */}
@@ -217,7 +220,7 @@ export default function InquirySection() {
                     value={formData.fullName}
                     onChange={handleChange}
                     placeholder="e.g. Eleanor Vance"
-                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-xs xs:text-sm sm:text-base text-white outline-none transition-colors duration-300 placeholder:text-white/25"
+                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-sm sm:text-base text-white outline-none transition-colors duration-300 placeholder:text-white/25"
                   />
                 </div>
 
@@ -232,7 +235,7 @@ export default function InquirySection() {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="e.g. eleanor@vancecapital.com"
-                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-xs xs:text-sm sm:text-base text-white outline-none transition-colors duration-300 placeholder:text-white/25"
+                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-sm sm:text-base text-white outline-none transition-colors duration-300 placeholder:text-white/25"
                   />
                 </div>
 
@@ -247,7 +250,7 @@ export default function InquirySection() {
                     value={formData.phone}
                     onChange={handleChange}
                     placeholder="e.g. +1 (555) 019-2834"
-                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-xs xs:text-sm sm:text-base text-white outline-none transition-colors duration-300 placeholder:text-white/25"
+                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-sm sm:text-base text-white outline-none transition-colors duration-300 placeholder:text-white/25"
                   />
                 </div>
 
@@ -259,7 +262,7 @@ export default function InquirySection() {
                     name="residenceType"
                     value={formData.residenceType}
                     onChange={handleChange}
-                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-xs xs:text-sm sm:text-base text-white outline-none transition-colors duration-300 cursor-pointer [&>option]:bg-[#17171a] [&>option]:text-white"
+                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-sm sm:text-base text-white outline-none transition-colors duration-300 cursor-pointer [&>option]:bg-[#17171a] [&>option]:text-white"
                   >
                     <option value="">SELECT COLLECTION...</option>
                     <option value="LUXURY VILLA">LUXURY VILLA</option>
@@ -279,7 +282,7 @@ export default function InquirySection() {
                     name="timeline"
                     value={formData.timeline}
                     onChange={handleChange}
-                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-xs xs:text-sm sm:text-base text-white outline-none transition-colors duration-300 cursor-pointer [&>option]:bg-[#17171a] [&>option]:text-white"
+                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-sm sm:text-base text-white outline-none transition-colors duration-300 cursor-pointer [&>option]:bg-[#17171a] [&>option]:text-white"
                   >
                     <option value="">SELECT TIMELINE...</option>
                     <option value="IMMEDIATE (MOVE-IN READY)">IMMEDIATE (MOVE-IN READY)</option>
@@ -297,7 +300,7 @@ export default function InquirySection() {
                     name="budgetRange"
                     value={formData.budgetRange}
                     onChange={handleChange}
-                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-xs xs:text-sm sm:text-base text-white outline-none transition-colors duration-300 cursor-pointer [&>option]:bg-[#17171a] [&>option]:text-white"
+                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-sm sm:text-base text-white outline-none transition-colors duration-300 cursor-pointer [&>option]:bg-[#17171a] [&>option]:text-white"
                   >
                     <option value="">SELECT BUDGET RANGE...</option>
                     <option value="$1.5M – $3.0M">$1,500,000 – $3,000,000</option>
@@ -316,7 +319,7 @@ export default function InquirySection() {
                     name="consultationType"
                     value={formData.consultationType}
                     onChange={handleChange}
-                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-xs xs:text-sm sm:text-base text-white outline-none transition-colors duration-300 cursor-pointer [&>option]:bg-[#17171a] [&>option]:text-white"
+                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-sm sm:text-base text-white outline-none transition-colors duration-300 cursor-pointer [&>option]:bg-[#17171a] [&>option]:text-white"
                   >
                     <option value="">SELECT FORMAT...</option>
                     <option value="PRIVATE ON-SITE TOUR">PRIVATE ON-SITE TOUR</option>
@@ -336,21 +339,21 @@ export default function InquirySection() {
                     value={formData.message}
                     onChange={handleChange}
                     placeholder="e.g. Preferred villa layout, pool..."
-                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-xs xs:text-sm sm:text-base text-white outline-none transition-colors duration-300 placeholder:text-white/25"
+                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-sm sm:text-base text-white outline-none transition-colors duration-300 placeholder:text-white/25"
                   />
                 </div>
 
               </div>
 
-              {/* ── 5. Newly Designed Clean Action Button ── */}
+              {/* ── 5. Action Button ── */}
               <div
                 ref={buttonRef}
-                className="mt-8 xs:mt-12 sm:mt-16 lg:mt-20 flex flex-col items-center justify-center text-center w-full mx-auto will-change-transform px-2"
+                className="mt-6 xs:mt-8 sm:mt-16 lg:mt-20 flex flex-col items-center justify-center text-center w-full mx-auto will-change-transform"
               >
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full xs:w-auto max-w-xs xs:max-w-none px-6 xs:px-10 sm:px-16 py-3.5 sm:py-4 border border-[#c9a96e] bg-transparent text-[#c9a96e] hover:bg-[#c9a96e] hover:text-[#17171a] text-[11px] xs:text-xs sm:text-sm font-sans tracking-[0.22em] xs:tracking-[0.28em] uppercase transition-all duration-300 cursor-pointer disabled:opacity-50 active:scale-[0.99]"
+                  className="w-full sm:w-auto px-6 xs:px-10 sm:px-16 py-3.5 sm:py-4 border border-[#c9a96e] bg-transparent text-[#c9a96e] hover:bg-[#c9a96e] hover:text-[#17171a] text-xs sm:text-sm font-sans tracking-[0.22em] sm:tracking-[0.28em] uppercase transition-all duration-300 cursor-pointer disabled:opacity-50 active:scale-[0.99] font-bold"
                 >
                   {isSubmitting ? (
                     <span className="flex items-center justify-center gap-2.5">
