@@ -1,118 +1,434 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "../utils/useGSAP";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const SQRT_5000 = Math.sqrt(5000);
+
 const TESTIMONIALS = [
   {
-    id: 1,
+    id: 0,
     client: "BERNADETTE HOGAN",
-    role: "RESIDENCE 04 HOMEOWNER",
-    image:
-      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1600&q=85",
-    rating: 5,
+    role: "Residence 04 Homeowner",
     location: "THE WHISPERING PINES • RESIDENCE 04",
+    image:
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=85",
+    rating: 5,
     quote:
-      "Michael was a great realtor. Such a hard worker, dedicated to helping us find the perfect neighborhood, price point and home. He's a workaholic so he was available morning, noon and night. Tireless and dedicated. Would recommend him 100%!",
+      "Michael was an exceptional partner in our home search. His tireless dedication, deep market acumen, and 24/7 availability made acquiring Residence 04 an effortless, first-class experience.",
+  },
+  {
+    id: 1,
+    client: "ALEXANDER & EVELYN VANCE",
+    role: "Estate Investors",
+    location: "FIRST KEY ESTATE • PAVILION SUITES",
+    image:
+      "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=85",
+    rating: 5,
+    quote:
+      "First Key Estate transformed our perception of masterplanned living. The architectural craftsmanship, privacy, and serene natural surroundings are truly unmatched — a generational investment.",
   },
   {
     id: 2,
-    client: "ALEXANDER & EVELYN VANCE",
-    role: "ESTATE INVESTORS",
+    client: "DR. JULIAN THORNE",
+    role: "Sanctuary Resident",
+    location: "BOTANICAL CANOPY • VILLA 18",
     image:
-      "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=1600&q=85",
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=85",
     rating: 5,
-    location: "FIRST KEY ESTATE • PAVILION SUITES",
     quote:
-      "First Key Estate transformed our entire perception of masterplanned living. The architectural craftsmanship, privacy, and serene natural surroundings at The Whispering Pines are truly unmatched. A generational investment for our family.",
+      "From initial masterplan consultation to final handover, the attention to detail was remarkable. Living surrounded by mature pine groves and contemporary luxury is extraordinary.",
   },
   {
     id: 3,
-    client: "DR. JULIAN THORNE",
-    role: "SANCTUARY RESIDENT",
+    client: "CATHERINE MONTGOMERY",
+    role: "Estate Investor",
+    location: "THE HEIRLOOM TERRACES • LOT 12",
     image:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1600&q=85",
+      "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&q=85",
     rating: 5,
-    location: "BOTANICAL CANOPY • VILLA 18",
     quote:
-      "From the initial masterplan consultation to the final handover of our residence, the attention to detail and transparency was remarkable. Living surrounded by mature pine groves and contemporary luxury is extraordinary.",
+      "A true masterclass in residential planning. First Key Estate delivers enduring value with modern aesthetics that will stand the test of time. I could not be happier with my sanctuary home.",
   },
   {
     id: 4,
     client: "MARCUS & SOPHIA REYNOLDS",
-    role: "HERITAGE RESIDENCE OWNERS",
-    image:
-      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1600&q=85",
-    rating: 5,
+    role: "Heritage Residence Owners",
     location: "WEST ENCLAVE • PRIVATE ESTATE",
+    image:
+      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=85",
+    rating: 5,
     quote:
       "The Whispering Pines embodies the perfect harmony between sustainable infrastructure and timeless luxury. The community amenities and surrounding botanical canopy exceed everything we ever envisioned.",
   },
-  {
-    id: 5,
-    client: "CATHERINE MONTGOMERY",
-    role: "ESTATE INVESTOR",
-    image:
-      "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=1600&q=85",
-    rating: 5,
-    location: "THE HEIRLOOM TERRACES • LOT 12",
-    quote:
-      "A true masterclass in residential planning. First Key Estate delivers enduring value with modern aesthetics that will stand the test of time. I could not be happier with my new sanctuary home.",
-  },
 ];
 
+/* ─────────────────────────────────────────────────────────── */
+/*  Interactive Stagger Testimonial Card                       */
+/* ─────────────────────────────────────────────────────────── */
+function TestimonialCard({
+  slot,
+  testimonial,
+  onCardClick,
+  cardWidth,
+  cardHeight,
+  cardSpacing,
+  isMobile,
+}) {
+  const isCenter = slot === 0;
+  const isRight = slot === 1;
+  const isLeft = slot === -1;
+  const isBack = slot === 2 || slot === -2;
+
+  // Compute 3D spatial positioning relative to section center
+  let x = 0;
+  let y = 0;
+  let scale = 1;
+  let rotation = 0;
+  let zIndex = 10;
+  let opacity = 1;
+
+  if (isCenter) {
+    x = 0;
+    y = isMobile ? -14 : -36;
+    scale = 1.02;
+    rotation = 0;
+    zIndex = 30;
+    opacity = 1;
+  } else if (isRight) {
+    x = cardSpacing;
+    y = isMobile ? 8 : 14;
+    scale = isMobile ? 0.88 : 0.93;
+    rotation = isMobile ? 2 : 3;
+    zIndex = 20;
+    opacity = isMobile ? 0.5 : 0.88;
+  } else if (isLeft) {
+    x = -cardSpacing;
+    y = isMobile ? 8 : 14;
+    scale = isMobile ? 0.88 : 0.93;
+    rotation = isMobile ? -2 : -3;
+    zIndex = 20;
+    opacity = isMobile ? 0.5 : 0.88;
+  } else if (slot === 2) {
+    // Right background queue
+    x = cardSpacing * 0.5;
+    y = 24;
+    scale = 0.7;
+    rotation = 1;
+    zIndex = 5;
+    opacity = 0;
+  } else {
+    // Left background queue
+    x = -cardSpacing * 0.5;
+    y = 24;
+    scale = 0.7;
+    rotation = -1;
+    zIndex = 5;
+    opacity = 0;
+  }
+
+  return (
+    <div
+      onClick={() => onCardClick(slot)}
+      className={`absolute left-1/2 top-1/2 font-sans select-none will-change-transform ${isCenter
+          ? "cursor-default shadow-2xl"
+          : isBack
+            ? "pointer-events-none"
+            : "cursor-pointer group hover:opacity-100"
+        }`}
+      style={{
+        width: cardWidth,
+        height: cardHeight,
+        padding: isMobile
+          ? "24px 20px 20px 20px"
+          : cardWidth > 420
+            ? "36px 38px 32px 38px"
+            : "28px 26px 24px 26px",
+        clipPath: `polygon(42px 0%, calc(100% - 42px) 0%, 100% 42px, 100% 100%, calc(100% - 42px) 100%, 42px 100%, 0 100%, 0 0)`,
+        transform: `translate(-50%, -50%) translate3d(${x}px, ${y}px, 0) rotate(${rotation}deg) scale(${scale})`,
+        transformOrigin: "center center",
+        backgroundColor: isCenter ? "#131316" : "#ffffff",
+        backgroundImage: isCenter
+          ? "linear-gradient(145deg, rgba(201,169,110,0.15) 0%, rgba(19,19,22,0.98) 45%, #131316 100%)"
+          : "none",
+        color: isCenter ? "#f8f7f5" : "#17171a",
+        border: isCenter
+          ? "1.5px solid rgba(201, 169, 110, 0.85)"
+          : "1.5px solid rgba(23, 23, 26, 0.12)",
+        boxShadow: isCenter
+          ? "0 25px 60px -10px rgba(0,0,0,0.5), 0 0 25px rgba(201,169,110,0.2)"
+          : "0 12px 35px rgba(23,23,26,0.06)",
+        opacity,
+        zIndex,
+        transition:
+          "transform 650ms cubic-bezier(0.23, 1, 0.32, 1), opacity 650ms cubic-bezier(0.23, 1, 0.32, 1), background-color 450ms ease, box-shadow 450ms ease, border-color 450ms ease",
+      }}
+    >
+      {/* 45-degree Chamfer Top-Right Gold Accent Line */}
+      <span
+        className="absolute block origin-top-right rotate-45 pointer-events-none transition-colors duration-500"
+        style={{
+          right: -2,
+          top: 40,
+          width: SQRT_5000,
+          height: 2,
+          backgroundColor: isCenter ? "#c9a96e" : "rgba(23, 23, 26, 0.15)",
+        }}
+      />
+
+      {/* Decorative Quotation Mark Watermark on Center Card */}
+      {isCenter && (
+        <span className="absolute top-4 right-7 text-7xl sm:text-8xl font-serif text-[#c9a96e]/10 pointer-events-none select-none font-black leading-none">
+          &rdquo;
+        </span>
+      )}
+
+      {/* Card Header: Avatar, Name, Role & Star Rating */}
+      <div className="flex items-center justify-between mb-3.5 relative z-10">
+        <div className="flex items-center gap-3 sm:gap-4">
+          {/* Avatar with luxury gold ring */}
+          <div className="relative flex-shrink-0">
+            <img
+              src={testimonial.image}
+              alt={testimonial.client}
+              className="h-11 w-11 xs:h-12 xs:w-12 sm:h-14 sm:w-14 rounded-full object-cover object-top transition-transform duration-500"
+              style={{
+                border: isCenter
+                  ? "2px solid #c9a96e"
+                  : "2px solid rgba(23,23,26,0.12)",
+                boxShadow: isCenter
+                  ? "0 0 14px rgba(201,169,110,0.4)"
+                  : "0 2px 6px rgba(0,0,0,0.06)",
+              }}
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <p
+              className="font-bold uppercase tracking-[0.1em] sm:tracking-[0.12em] transition-colors duration-500 leading-tight"
+              style={{
+                fontSize: isMobile ? "0.78rem" : cardWidth > 420 ? "0.92rem" : "0.84rem",
+                color: isCenter ? "#c9a96e" : "#17171a",
+              }}
+            >
+              {testimonial.client}
+            </p>
+            <p
+              className="text-[9.5px] xs:text-[10px] sm:text-[11.5px] uppercase font-medium tracking-[0.05em] mt-0.5 transition-colors duration-500"
+              style={{
+                color: isCenter ? "rgba(248, 247, 245, 0.7)" : "#9e7d3b",
+              }}
+            >
+              {testimonial.role}
+            </p>
+          </div>
+        </div>
+
+        {/* 5-Star Rating */}
+        <div className="flex flex-col items-end flex-shrink-0">
+          <div
+            className="flex items-center gap-0.5 text-xs sm:text-sm tracking-widest transition-colors duration-500"
+            style={{ color: isCenter ? "#c9a96e" : "#9e7d3b" }}
+          >
+            {"★".repeat(testimonial.rating)}
+          </div>
+          <span
+            className="text-[8px] xs:text-[8.5px] sm:text-[9.5px] font-sans tracking-[0.12em] sm:tracking-[0.14em] uppercase mt-0.5 sm:mt-1 font-semibold transition-colors duration-500"
+            style={{
+              color: isCenter
+                ? "rgba(201, 169, 110, 0.85)"
+                : "rgba(23, 23, 26, 0.38)",
+            }}
+          >
+            VERIFIED OWNER
+          </span>
+        </div>
+      </div>
+
+      {/* Gold Hairline Divider */}
+      <div className="relative w-full flex items-center justify-center my-2.5 sm:my-3.5">
+        <div
+          className="w-full h-px transition-colors duration-500"
+          style={{
+            background: isCenter
+              ? "linear-gradient(90deg, transparent, #c9a96e, transparent)"
+              : "linear-gradient(90deg, transparent, rgba(23,23,26,0.15), transparent)",
+          }}
+        />
+      </div>
+
+      {/* Quote Text */}
+      <p
+        className="font-normal tracking-tight transition-colors duration-500 relative z-10"
+        style={{
+          fontSize: isMobile
+            ? "0.90rem"
+            : cardWidth > 420
+              ? "1.06rem"
+              : "0.94rem",
+          lineHeight: isMobile ? 1.55 : 1.65,
+          color: isCenter ? "rgba(248, 247, 245, 0.95)" : "rgba(23, 23, 26, 0.85)",
+          display: "-webkit-box",
+          WebkitLineClamp: isMobile ? 5 : 5,
+          WebkitBoxOrient: "vertical",
+          overflow: "hidden",
+        }}
+      >
+        &ldquo;{testimonial.quote}&rdquo;
+      </p>
+
+      {/* Footer Location Tag */}
+      <div
+        className="absolute left-0 right-0 flex items-center justify-between"
+        style={{
+          bottom: isMobile ? 18 : 22,
+          paddingLeft: isMobile ? 22 : 36,
+          paddingRight: isMobile ? 22 : 36,
+        }}
+      >
+        <span
+          className="text-[9px] xs:text-[9.5px] sm:text-[11px] font-sans tracking-[0.14em] uppercase font-medium truncate max-w-[70%]"
+          style={{
+            color: isCenter ? "#c9a96e" : "#9e7d3b",
+          }}
+        >
+          {testimonial.location}
+        </span>
+
+        <span
+          className="text-[10.5px] sm:text-sm font-serif italic flex-shrink-0"
+          style={{
+            color: isCenter ? "rgba(201, 169, 110, 0.45)" : "rgba(23, 23, 26, 0.25)",
+          }}
+        >
+          First Key Estate
+        </span>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  Main Testimonials Section                                  */
+/* ─────────────────────────────────────────────────────────── */
 export default function Testimonials() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isFading, setIsFading] = useState(false);
-  const [autoPlayActive, setAutoPlayActive] = useState(true);
-  const [touchStart, setTouchStart] = useState(0);
-  const [touchEnd, setTouchEnd] = useState(0);
+  const [dimensions, setDimensions] = useState({
+    cardWidth: 490,
+    cardHeight: 410,
+    cardSpacing: 440,
+    isMobile: false,
+  });
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [autoPlay, setAutoPlay] = useState(true);
 
   const sectionRef = useRef(null);
   const headerRef = useRef(null);
-  const photoCardRef = useRef(null);
-  const quoteCardRef = useRef(null);
-  const quoteTextRef = useRef(null);
-  const photoImgRef = useRef(null);
-  const mobileCardRef = useRef(null);
-  const mobileImageRef = useRef(null);
-  const mobileContentRef = useRef(null);
-  const mobileAuthorRef = useRef(null);
-  const mobileNavRef = useRef(null);
-  const autoPlayTimerRef = useRef(null);
+  const eyebrowLeftBarRef = useRef(null);
+  const eyebrowRightBarRef = useRef(null);
+  const eyebrowTextRef = useRef(null);
+  const titleLine1Ref = useRef(null);
+  const titleLine2Ref = useRef(null);
+  const subtitleRef = useRef(null);
 
-  const activeTestimonial = TESTIMONIALS[currentIndex];
+  const carouselContainerRef = useRef(null);
+  const bgAuraRef = useRef(null);
 
-  // Auto-play functionality
+  /* ── Responsive Calculations: Optimized for Full Screen & Mobile ── */
   useEffect(() => {
-    if (!autoPlayActive || isFading) return;
+    const handleResize = () => {
+      const w = window.innerWidth;
+      const isMob = w < 640;
 
-    autoPlayTimerRef.current = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % TESTIMONIALS.length);
-    }, 6000);
-
-    return () => {
-      if (autoPlayTimerRef.current) clearInterval(autoPlayTimerRef.current);
+      if (w < 400) {
+        setDimensions({
+          cardWidth: Math.min(w - 32, 340),
+          cardHeight: 360,
+          cardSpacing: Math.min(w * 0.85, 300),
+          isMobile: true,
+        });
+      } else if (w < 640) {
+        setDimensions({
+          cardWidth: Math.min(w - 40, 360),
+          cardHeight: 370,
+          cardSpacing: Math.min(w * 0.85, 320),
+          isMobile: true,
+        });
+      } else if (w < 768) {
+        setDimensions({
+          cardWidth: 380,
+          cardHeight: 375,
+          cardSpacing: 340,
+          isMobile: false,
+        });
+      } else if (w < 1024) {
+        setDimensions({
+          cardWidth: 420,
+          cardHeight: 385,
+          cardSpacing: 370,
+          isMobile: false,
+        });
+      } else if (w < 1440) {
+        setDimensions({
+          cardWidth: 460,
+          cardHeight: 400,
+          cardSpacing: 410,
+          isMobile: false,
+        });
+      } else {
+        setDimensions({
+          cardWidth: 500,
+          cardHeight: 415,
+          cardSpacing: 450,
+          isMobile: false,
+        });
+      }
     };
-  }, [autoPlayActive, isFading]);
 
-  const pauseAutoPlay = () => {
-    setAutoPlayActive(false);
-    if (autoPlayTimerRef.current) clearInterval(autoPlayTimerRef.current);
-  };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
-  const resumeAutoPlay = () => {
-    setAutoPlayActive(true);
-  };
+  /* ── Step Handlers ── */
+  const handleNext = useCallback(() => {
+    setActiveIndex((prev) => (prev + 1) % TESTIMONIALS.length);
+  }, []);
 
-  // ScrollTrigger Initial Rise-Up Animations
+  const handlePrev = useCallback(() => {
+    setActiveIndex(
+      (prev) => (prev - 1 + TESTIMONIALS.length) % TESTIMONIALS.length
+    );
+  }, []);
+
+  const handleCardClick = useCallback((slot) => {
+    if (slot === 1) {
+      setActiveIndex((prev) => (prev + 1) % TESTIMONIALS.length);
+    } else if (slot === -1) {
+      setActiveIndex(
+        (prev) => (prev - 1 + TESTIMONIALS.length) % TESTIMONIALS.length
+      );
+    }
+  }, []);
+
+  /* ── Auto-Play: Smooth Rotate Every 3 Seconds (3000ms) ── */
+  useEffect(() => {
+    if (!autoPlay) return;
+    const timer = setInterval(() => {
+      handleNext();
+    }, 3000);
+
+    return () => clearInterval(timer);
+  }, [autoPlay, handleNext]);
+
+  /* ── GSAP ScrollTrigger Entrance & Parallax Scrub ── */
   useGSAP(
     () => {
       const section = sectionRef.current;
       if (!section) return;
 
+      // ── 1. Entrance Reveal Timeline on Scroll-In ──
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
@@ -121,412 +437,220 @@ export default function Testimonials() {
         },
       });
 
-      // 1. Centered Header Reveal
+      // Eyebrow expanding bars & tracking
       tl.fromTo(
-        headerRef.current,
-        { y: 70, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1.1, ease: "power3.out" }
+        [eyebrowLeftBarRef.current, eyebrowRightBarRef.current],
+        { scaleX: 0, opacity: 0 },
+        { scaleX: 1, opacity: 1, duration: 1.1, ease: "power3.out" }
       );
 
-      // 2. Photos & Quote Cards Symmetrical Rise Up (Desktop)
       tl.fromTo(
-        photoCardRef.current,
-        { y: 90, opacity: 0, scale: 0.96 },
+        eyebrowTextRef.current,
+        { y: 25, opacity: 0, letterSpacing: "0.2em" },
+        { y: 0, opacity: 1, letterSpacing: "0.36em", duration: 1.1, ease: "power3.out" },
+        "-=0.9"
+      );
+
+      // Title Line 1 ("Don't Take")
+      tl.fromTo(
+        titleLine1Ref.current,
+        { y: 65, opacity: 0, scale: 0.94 },
+        { y: 0, opacity: 1, scale: 1, duration: 1.2, ease: "power3.out" },
+        "-=0.8"
+      );
+
+      // Title Line 2 ("Our Word for It.")
+      tl.fromTo(
+        titleLine2Ref.current,
+        { y: 75, opacity: 0, scale: 0.94 },
+        { y: 0, opacity: 1, scale: 1, duration: 1.25, ease: "power3.out" },
+        "-=0.95"
+      );
+
+      // Carousel deck reveal
+      tl.fromTo(
+        carouselContainerRef.current,
+        { y: 70, opacity: 0, scale: 0.96 },
         { y: 0, opacity: 1, scale: 1, duration: 1.2, ease: "power3.out" },
         "-=0.7"
       );
 
-      tl.fromTo(
-        quoteCardRef.current,
-        { y: 90, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1.2, ease: "power3.out" },
-        "-=0.9"
-      );
+      // ── 2. Multi-Layer Parallax Scrub Dynamics ──
+      // Multi-layer heading parallax float
+      gsap.to(titleLine1Ref.current, {
+        yPercent: -18,
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1.1,
+        },
+      });
 
-      // 3. Mobile Card Reveal with Stagger
-      if (mobileCardRef.current) {
-        tl.fromTo(
-          mobileCardRef.current,
-          { y: 90, opacity: 0, scale: 0.96 },
-          { y: 0, opacity: 1, scale: 1, duration: 1.2, ease: "power3.out" },
-          "-=0.7"
-        );
+      gsap.to(titleLine2Ref.current, {
+        yPercent: -10,
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1.3,
+        },
+      });
+
+      // Parallax background glow float
+      if (bgAuraRef.current) {
+        gsap.to(bgAuraRef.current, {
+          yPercent: -30,
+          scale: 1.12,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1.3,
+          },
+        });
+      }
+
+      // Parallax 3D deck tilt and inertia on scroll
+      if (carouselContainerRef.current) {
+        gsap.to(carouselContainerRef.current, {
+          yPercent: -6,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1.1,
+          },
+        });
       }
     },
     { scope: sectionRef }
   );
 
-  // Premium transition animation
-  const animateTransition = (index) => {
-    // Desktop animation
-    gsap.to([quoteTextRef.current, photoImgRef.current], {
-      y: -15,
-      opacity: 0,
-      duration: 0.3,
-      ease: "power2.inOut",
-      onComplete: () => {
-        setCurrentIndex(index);
-        setIsFading(false);
-
-        gsap.fromTo(
-          [quoteTextRef.current, photoImgRef.current],
-          { y: 35, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.6, ease: "power3.out", stagger: 0.1 }
-        );
-      },
-    });
-
-    // Mobile animation with stagger
-    if (mobileImageRef.current && mobileContentRef.current) {
-      gsap.to([mobileImageRef.current, mobileContentRef.current], {
-        y: -12,
-        opacity: 0,
-        duration: 0.3,
-        ease: "power2.inOut",
-        onComplete: () => {
-          gsap.fromTo(
-            [mobileImageRef.current, mobileContentRef.current],
-            { y: 25, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.65, ease: "power3.out", stagger: 0.12 }
-          );
-
-          // Stagger author and nav
-          if (mobileAuthorRef.current) {
-            gsap.fromTo(
-              mobileAuthorRef.current,
-              { y: 15, opacity: 0 },
-              { y: 0, opacity: 1, duration: 0.5, ease: "power3.out", delay: 0.15 }
-            );
-          }
-          if (mobileNavRef.current) {
-            gsap.fromTo(
-              mobileNavRef.current,
-              { y: 15, opacity: 0 },
-              { y: 0, opacity: 1, duration: 0.5, ease: "power3.out", delay: 0.25 }
-            );
-          }
-        },
-      });
-    }
-  };
-
-  const handleSelect = (index) => {
-    if (index === currentIndex || isFading) return;
-    setIsFading(true);
-    pauseAutoPlay();
-    animateTransition(index);
-  };
-
-  const handlePrev = () => {
-    const nextIdx = (currentIndex - 1 + TESTIMONIALS.length) % TESTIMONIALS.length;
-    handleSelect(nextIdx);
-  };
-
-  const handleNext = () => {
-    const nextIdx = (currentIndex + 1) % TESTIMONIALS.length;
-    handleSelect(nextIdx);
-  };
-
-  // Swipe gesture handlers
+  /* ── Touch Gesture Engine for Mobile ── */
+  const touchStartXRef = useRef(0);
   const handleTouchStart = (e) => {
-    setTouchStart(e.targetTouches[0].clientX);
-    pauseAutoPlay();
+    setAutoPlay(false);
+    touchStartXRef.current = e.touches[0].clientX;
+  };
+  const handleTouchEnd = (e) => {
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = touchStartXRef.current - touchEndX;
+    if (Math.abs(diff) > 35) {
+      if (diff > 0) handleNext();
+      else handlePrev();
+    }
+    // Resume auto-play after swipe
+    setTimeout(() => setAutoPlay(true), 4000);
   };
 
-  const handleTouchMove = (e) => {
-    setTouchEnd(e.targetTouches[0].clientX);
+  /* ── Slot Computation for 5 Cards ── */
+  const getSlot = (itemIndex) => {
+    const diff = (itemIndex - activeIndex + TESTIMONIALS.length) % TESTIMONIALS.length;
+    if (diff === 0) return 0;   // Center
+    if (diff === 1) return 1;   // Right Flank
+    if (diff === 4) return -1;  // Left Flank
+    if (diff === 2) return 2;   // Right Back Queue (Hidden)
+    return -2;                  // Left Back Queue (Hidden)
   };
 
-  const handleTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > 50;
-    const isRightSwipe = distance < -50;
-
-    if (isLeftSwipe) handleNext();
-    if (isRightSwipe) handlePrev();
-
-    setTimeout(resumeAutoPlay, 5000);
-  };
+  const containerHeight =
+    dimensions.cardHeight + (dimensions.isMobile ? 50 : 80);
 
   return (
     <section
       ref={sectionRef}
       id="testimonials"
-      className="relative w-full min-h-screen min-h-[100dvh] flex flex-col justify-center bg-[#f8f7f5] text-[#17171a] py-12 xs:py-16 sm:py-24 lg:py-32 px-4 xs:px-6 sm:px-12 lg:px-20 xl:px-28 2xl:px-36 select-none overflow-hidden font-sans"
+      className="relative w-full max-w-full min-h-screen min-h-[100dvh] flex flex-col justify-center items-center bg-[#f8f7f5] text-[#17171a] pt-8 pb-14 xs:pt-10 xs:pb-16 sm:py-24 lg:py-28 px-4 xs:px-6 sm:px-8 lg:px-12 select-none overflow-hidden font-sans"
+      onMouseEnter={() => setAutoPlay(false)}
+      onMouseLeave={() => setAutoPlay(true)}
     >
-      <div className="w-full max-w-[1720px] mx-auto flex flex-col items-center my-auto">
+      {/* ── Centered Parallax Ambient Gold Glow ── */}
+      <div
+        ref={bgAuraRef}
+        className="absolute pointer-events-none will-change-transform"
+        style={{
+          width: "clamp(500px, 65vw, 1100px)",
+          height: "clamp(500px, 65vw, 1100px)",
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(201,169,110,0.08) 0%, transparent 65%)",
+          top: "10%",
+          left: "50%",
+          transform: "translateX(-50%)",
+        }}
+      />
 
-        {/* ── Heading Centered in the Middle of the Page with Guaranteed Ample Gap Below ── */}
+      <div className="w-full max-w-[1520px] mx-auto flex flex-col items-center justify-center my-auto">
+        {/* ── Section Header with Multi-Plane Parallax Reveal ── */}
         <div
           ref={headerRef}
-          className="flex flex-col items-center justify-center text-center mx-auto pb-6 xs:pb-10 sm:pb-16 lg:pb-24 will-change-transform max-w-4xl px-2"
+          className="flex flex-col items-center justify-center text-center w-full max-w-4xl mx-auto -mt-6 xs:-mt-4 sm:mt-0 pb-2 xs:pb-4 sm:pb-10 lg:pb-14 will-change-transform px-2 sm:px-4"
         >
-          {/* Eyebrow with Flanking Gold Accent Lines */}
-          <div className="flex items-center justify-center space-x-2.5 xs:space-x-4 mb-2.5 xs:mb-4 sm:mb-6">
-            <span className="w-5 xs:w-10 sm:w-16 h-[2px] bg-[#9e7d3b]" />
-            <span className="text-[9px] xs:text-[11px] sm:text-xs font-sans tracking-[0.22em] xs:tracking-[0.35em] text-[#9e7d3b] uppercase font-bold whitespace-nowrap">
+          {/* Eyebrow */}
+          <div className="flex items-center justify-center space-x-2.5 xs:space-x-4 mb-2 sm:mb-4">
+            <span
+              ref={eyebrowLeftBarRef}
+              className="w-5 xs:w-8 sm:w-16 h-[2px] bg-[#9e7d3b] inline-block origin-right will-change-transform"
+            />
+            <span
+              ref={eyebrowTextRef}
+              className="text-[9px] xs:text-[10px] sm:text-xs font-sans tracking-[0.22em] xs:tracking-[0.32em] text-[#9e7d3b] uppercase font-bold whitespace-nowrap will-change-transform"
+            >
               ESTATE RESIDENTS &amp; INVESTORS
             </span>
-            <span className="w-5 xs:w-10 sm:w-16 h-[2px] bg-[#9e7d3b]" />
+            <span
+              ref={eyebrowRightBarRef}
+              className="w-5 xs:w-8 sm:w-16 h-[2px] bg-[#9e7d3b] inline-block origin-left will-change-transform"
+            />
           </div>
 
-          {/* Grand Centered Heading in Fira Sans */}
-          <h2 className="text-2xl xs:text-3xl sm:text-5xl lg:text-[4.6rem] xl:text-[5.4rem] font-bold tracking-tight leading-[1.12] sm:leading-[1.06] text-[#17171a]">
-            <span>Don&apos;t Take</span>{" "}
-            <span className="text-[#17171a]/30 font-light ml-1 xs:ml-2 sm:ml-3">
+          {/* Grand Heading: 2 Distinct Architectural Typography Layers */}
+          <h2 className="text-3xl xs:text-4xl sm:text-5xl lg:text-[4.2rem] xl:text-[4.8rem] leading-[1.08] sm:leading-[1.04] tracking-tight text-[#17171a] text-center">
+            <span
+              ref={titleLine1Ref}
+              className="block font-black uppercase text-[#17171a] will-change-transform tracking-tight"
+            >
+              Don&apos;t Take
+            </span>
+            <span
+              ref={titleLine2Ref}
+              className="block font-light font-serif italic text-[#17171a]/75 sm:text-[#17171a]/70 will-change-transform mt-0.5 sm:mt-1 tracking-normal"
+            >
               Our Word for It.
             </span>
           </h2>
+          <br className="hidden sm:block" /><br className="hidden sm:block" /><br /><br />
         </div>
 
-        {/* ── MOBILE VIEW: Premium Carousel (Hidden on lg+) ── */}
+        {/* ── Symmetrical 5-Card Stagger Deck ── */}
         <div
-          className="w-full max-w-lg lg:hidden flex flex-col gap-8"
+          ref={carouselContainerRef}
+          className="relative w-full max-w-full mx-auto flex items-center justify-center overflow-hidden will-change-transform"
+          style={{ height: containerHeight, perspective: "1200px" }}
           onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
-          {/* Premium Testimonial Card */}
-          <div
-            ref={mobileCardRef}
-            className="w-full rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(23,23,26,0.15)] border border-[#17171a]/8 bg-white will-change-transform group"
-          >
-            {/* Image Container with Premium Overlay */}
-            <div className="w-full h-[300px] sm:h-[380px] relative overflow-hidden bg-gradient-to-br from-[#e5e3dc] to-[#d9d5cc]">
-              <img
-                ref={mobileImageRef}
-                src={activeTestimonial.image}
-                alt={activeTestimonial.client}
-                className="w-full h-full object-cover object-center filter brightness-[0.96] group-hover:brightness-[0.92] will-change-transform transition-all duration-500"
+          {TESTIMONIALS.map((testimonial, index) => {
+            const slot = getSlot(index);
+            return (
+              <TestimonialCard
+                key={testimonial.id}
+                slot={slot}
+                testimonial={testimonial}
+                onCardClick={handleCardClick}
+                cardWidth={dimensions.cardWidth}
+                cardHeight={dimensions.cardHeight}
+                cardSpacing={dimensions.cardSpacing}
+                isMobile={dimensions.isMobile}
               />
-
-              {/* Luxury Gradient Overlays */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none" />
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/30 pointer-events-none" />
-
-              {/* Top Accent Line */}
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#c9a96e] via-[#d4b896] to-transparent" />
-
-              {/* Location Tag - Premium Style */}
-              <div className="absolute bottom-4 left-4 z-10">
-                <div className="flex items-center space-x-2">
-                  <span className="w-2 h-2 rounded-full bg-[#c9a96e]" />
-                  <span className="text-[9px] xs:text-[10px] font-sans tracking-[0.15em] text-[#e5e3dc] uppercase bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-[#c9a96e]/40 shadow-xl font-medium">
-                    {activeTestimonial.location}
-                  </span>
-                </div>
-              </div>
-
-              {/* Auto-play Indicator Dot */}
-              <div className="absolute top-4 right-4 z-10">
-                <div className="relative w-2 h-2">
-                  <div className={`absolute inset-0 bg-[#c9a96e] rounded-full ${autoPlayActive ? 'animate-pulse' : ''}`} />
-                </div>
-              </div>
-            </div>
-
-            {/* Content Section with Premium Spacing */}
-            <div
-              ref={mobileContentRef}
-              className="px-6 pt-8 pb-6 xs:px-7 xs:pt-10 xs:pb-7 sm:px-8 sm:pt-12 sm:pb-8 flex flex-col gap-7 will-change-transform"
-            >
-              {/* Quotation Mark & Quote */}
-              <div className="flex flex-col gap-5">
-                <div className="text-4xl xs:text-5xl font-sans text-[#c9a96e] leading-none opacity-60 font-black">
-                  &rdquo;
-                </div>
-                <p className="text-lg xs:text-xl sm:text-2xl font-sans font-normal leading-[1.55] text-[#17171a] tracking-tight">
-                  &ldquo;{activeTestimonial.quote}&rdquo;
-                </p>
-              </div>
-
-              {/* Elegant Divider */}
-              <div className="flex items-center gap-3">
-                <div className="flex-1 h-[1px] bg-gradient-to-r from-[#17171a]/20 to-transparent" />
-                <span className="text-[#c9a96e] text-xs tracking-widest font-medium">●</span>
-                <div className="flex-1 h-[1px] bg-gradient-to-l from-[#17171a]/20 to-transparent" />
-              </div>
-
-              {/* Author Info - Premium Typography */}
-              <div
-                ref={mobileAuthorRef}
-                className="flex flex-col gap-3"
-              >
-                <div className="flex flex-col gap-2">
-                  <p className="text-xs xs:text-sm font-sans tracking-[0.1em] text-[#17171a] font-bold uppercase">
-                    {activeTestimonial.client}
-                  </p>
-                  <div className="flex items-center space-x-2">
-                    <p className="text-[11px] xs:text-xs font-sans tracking-[0.08em] text-[#9e7d3b] font-medium uppercase">
-                      {activeTestimonial.role}
-                    </p>
-                    <span className="w-1 h-1 rounded-full bg-[#17171a]/20" />
-                    <div className="flex items-center text-[#c9a96e] text-xs tracking-widest">
-                      {"★".repeat(activeTestimonial.rating)}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Navigation Section */}
-              <div
-                ref={mobileNavRef}
-                className="flex flex-col gap-5 pt-2"
-              >
-                {/* Indicator Pills with Enhanced Feedback */}
-                <div className="flex items-center justify-center space-x-2.5">
-                  {TESTIMONIALS.map((item, idx) => (
-                    <button
-                      key={item.id}
-                      onClick={() => handleSelect(idx)}
-                      onMouseEnter={pauseAutoPlay}
-                      onMouseLeave={resumeAutoPlay}
-                      aria-label={`View testimonial ${item.id}`}
-                      className={`font-sans flex items-center justify-center transition-all duration-300 cursor-pointer font-medium ${currentIndex === idx
-                          ? "w-9 h-9 bg-[#17171a] text-white border-2 border-[#17171a] text-sm shadow-lg scale-110"
-                          : "w-7 h-7 bg-[#f8f7f5] text-[#17171a]/60 border-1.5 border-[#17171a]/30 text-xs hover:border-[#17171a]/60 hover:text-[#17171a] hover:bg-white hover:scale-105"
-                        } rounded-full`}
-                    >
-                      {item.id}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Arrow Navigation Buttons - Premium Styling */}
-                <div className="flex items-center justify-between gap-4">
-                  <button
-                    onClick={handlePrev}
-                    onMouseEnter={pauseAutoPlay}
-                    onMouseLeave={resumeAutoPlay}
-                    aria-label="Previous testimonial"
-                    className="flex-1 h-12 rounded-full border border-[#17171a]/25 flex items-center justify-center text-lg text-[#17171a] hover:bg-[#17171a] hover:text-white hover:border-[#17171a] transition-all duration-300 cursor-pointer hover:shadow-lg hover:scale-105 active:scale-95"
-                  >
-                    ←
-                  </button>
-                  <button
-                    onClick={handleNext}
-                    onMouseEnter={pauseAutoPlay}
-                    onMouseLeave={resumeAutoPlay}
-                    aria-label="Next testimonial"
-                    className="flex-1 h-12 rounded-full border border-[#17171a]/25 flex items-center justify-center text-lg text-[#17171a] hover:bg-[#17171a] hover:text-white hover:border-[#17171a] transition-all duration-300 cursor-pointer hover:shadow-lg hover:scale-105 active:scale-95"
-                  >
-                    →
-                  </button>
-                </div>
-
-                {/* Swipe Hint - Subtle */}
-                <p className="text-center text-[11px] text-[#17171a]/40 font-sans tracking-wide uppercase font-medium mt-2">
-                  Swipe or tap to explore
-                </p>
-              </div>
-            </div>
-          </div>
+            );
+          })}
         </div>
-
-        {/* ── DESKTOP VIEW: 2-Column Responsive Editorial Grid (Hidden on mobile) ── */}
-        <div className="hidden lg:grid grid-cols-12 gap-16 xl:gap-24 items-stretch w-full max-w-none mx-auto">
-
-          {/* Left Column: Lifestyle Photography */}
-          <div
-            ref={photoCardRef}
-            className="col-span-6 relative w-full h-[500px] xl:h-[540px] rounded-2xl overflow-hidden shadow-[0_16px_40px_rgba(23,23,26,0.1)] border border-[#17171a]/10 bg-[#e5e3dc] will-change-transform"
-          >
-            <img
-              ref={photoImgRef}
-              src={activeTestimonial.image}
-              alt={activeTestimonial.client}
-              className="w-full h-full object-cover object-center filter brightness-[0.98] will-change-transform"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent pointer-events-none" />
-
-            {/* Elegant Tag on Photo */}
-            <div className="absolute bottom-3.5 left-3.5 z-10">
-              <span className="text-[11px] font-sans tracking-widest text-[#c9a96e] uppercase bg-[#17171a]/95 backdrop-blur-md px-3 py-1 rounded border border-[#c9a96e]/30 shadow-lg font-medium">
-                {activeTestimonial.location}
-              </span>
-            </div>
-          </div>
-
-          {/* Right Column: Quote Box */}
-          <div
-            ref={quoteCardRef}
-            className="col-span-6 flex flex-col justify-between py-2 w-full will-change-transform bg-transparent p-0 rounded-none border-none shadow-none"
-          >
-            {/* Top Divider with Number Pills & Quotation Mark */}
-            <div>
-              <div className="border-t border-[#17171a]/20 pt-7 flex items-center justify-between w-full">
-                {/* Number Pills: (1) (2) (3) (4) (5) */}
-                <div className="flex items-center space-x-3.5">
-                  {TESTIMONIALS.map((item, idx) => (
-                    <button
-                      key={item.id}
-                      onClick={() => handleSelect(idx)}
-                      aria-label={`View testimonial ${item.id}`}
-                      className={`w-9 h-9 rounded-full text-sm font-sans flex items-center justify-center transition-all duration-200 cursor-pointer ${currentIndex === idx
-                          ? "bg-[#17171a] text-white border-2 border-[#17171a] font-bold shadow-md scale-105"
-                          : "bg-transparent text-[#17171a]/60 border border-[#17171a]/25 hover:border-[#17171a] hover:text-[#17171a]"
-                        }`}
-                    >
-                      {item.id}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Quotation Mark */}
-                <div className="text-5xl font-sans text-[#17171a] leading-none select-none font-black opacity-85">
-                  &rdquo;
-                </div>
-              </div>
-
-              {/* Large Editorial Quote */}
-              <div className="my-8 lg:mt-14 lg:mb-12 min-h-[160px] flex items-center">
-                <p
-                  ref={quoteTextRef}
-                  className="text-2xl lg:text-[2.1rem] xl:text-[2.45rem] font-sans font-normal leading-[1.42] text-[#17171a] tracking-tight will-change-transform"
-                >
-                  &ldquo;{activeTestimonial.quote}&rdquo;
-                </p>
-              </div>
-            </div>
-
-            {/* Bottom Row: Author & Rating with Navigation Controls */}
-            <div className="pt-6 border-t border-[#17171a]/15 flex flex-row items-center justify-between gap-2 w-full">
-              <div className="flex flex-wrap items-center gap-3 text-sm font-sans tracking-widest text-[#17171a] font-bold uppercase">
-                <span>{activeTestimonial.client}</span>
-                <span className="text-[#17171a]/30 font-normal">/</span>
-                <span className="text-[#9e7d3b] tracking-wider text-sm font-medium">
-                  {activeTestimonial.role}
-                </span>
-                <span className="text-[#17171a]/30 font-normal">/</span>
-                <div className="flex items-center text-[#c9a96e] text-base tracking-widest">
-                  {"★".repeat(activeTestimonial.rating)}
-                </div>
-              </div>
-
-              {/* Prev / Next Navigation Arrows */}
-              <div className="flex items-center space-x-2 shrink-0">
-                <button
-                  onClick={handlePrev}
-                  aria-label="Previous testimonial"
-                  className="w-10 h-10 rounded-full border border-[#17171a]/25 flex items-center justify-center text-sm text-[#17171a] hover:bg-[#17171a] hover:text-white transition-colors duration-200 cursor-pointer"
-                >
-                  ←
-                </button>
-                <button
-                  onClick={handleNext}
-                  aria-label="Next testimonial"
-                  className="w-10 h-10 rounded-full border border-[#17171a]/25 flex items-center justify-center text-sm text-[#17171a] hover:bg-[#17171a] hover:text-white transition-colors duration-200 cursor-pointer"
-                >
-                  →
-                </button>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-
       </div>
     </section>
   );

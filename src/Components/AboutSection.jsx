@@ -43,23 +43,26 @@ export default function AboutSection() {
   const sectionRef = useRef(null);
   const trackRef = useRef(null);
 
-  // Background Parallax Reference Grid (Pure Dark Charcoal)
+  // Background Parallax Reference Grid
   const bgGridRef = useRef(null);
 
   // Panel Container Refs for Precision containerAnimation ScrollTriggers
+  const panel1Ref = useRef(null);
   const heroPanelRef = useRef(null);
+  const panel3Ref = useRef(null);
   const galleryPanelRef = useRef(null);
   const mobGalleryPanelRef = useRef(null);
+  const journeyPanelRef = useRef(null);
   const stripPanelRef = useRef(null);
   const optionsPanelRef = useRef(null);
   const finalHeroPanelRef = useRef(null);
 
-  // Panel Unified Content Container Parallax Refs
+  // Content Container Parallax Refs
   const card1Ref = useRef(null);
   const card3Ref = useRef(null);
   const journeyCardRef = useRef(null);
 
-  // Panel 2 First Hero Imagery Parallax Refs
+  // Panel 2 Hero Imagery Parallax Refs
   const imgZoomRef = useRef(null);
   const heroBadgeRef = useRef(null);
 
@@ -90,9 +93,11 @@ export default function AboutSection() {
 
       const getScrollAmount = () => track.scrollWidth - window.innerWidth;
       const isMobile = window.innerWidth < 1024;
+      
+      // Fixed mobile sensitivity: 1:1 natural scroll distance (no bloated multiplier)
       const getScrollDistance = () => {
         const amount = getScrollAmount();
-        return window.innerWidth < 1024 ? amount * 2.2 : amount * 1.35;
+        return isMobile ? amount * 0.95 : amount * 1.15;
       };
 
       // ── 1. Main Foreground Horizontal Pin & Master Scroll Tween ──
@@ -104,7 +109,7 @@ export default function AboutSection() {
           start: "top top",
           end: () => `+=${getScrollDistance()}`,
           pin: true,
-          scrub: isMobile ? 0.5 : 1,
+          scrub: isMobile ? 0.3 : 0.8,
           anticipatePin: 1,
           invalidateOnRefresh: true,
         },
@@ -119,59 +124,308 @@ export default function AboutSection() {
             trigger: section,
             start: "top top",
             end: () => `+=${getScrollDistance()}`,
-            scrub: isMobile ? 0.5 : 1,
+            scrub: isMobile ? 0.3 : 0.8,
           },
         });
       }
 
-      // ── 3. Responsive Multi-Plane Parallax Engine with matchMedia ──
-      const mm = gsap.matchMedia();
+      // ── 3. Multi-Plane Typography Parallax Engine (containerAnimation) ──
 
-      // ══════════════════════════════════════════════════════════════════════
-      // DESKTOP (>= 1024px): Precision Container-Bound Multi-Axis Parallax
-      // ══════════════════════════════════════════════════════════════════════
-      mm.add("(min-width: 1024px)", () => {
-        // ── Text Cards Parallax ──
-        if (card1Ref.current) {
-          gsap.to(card1Ref.current, {
+      // ── PANEL 1: "DISCOVER 18TH CENTURY RURAL LIFE IN PENN." ──
+      if (panel1Ref.current) {
+        // Eyebrow tracking drift
+        gsap.fromTo(
+          ".p1-eyebrow",
+          { x: 35, opacity: 0.5, letterSpacing: "0.28em" },
+          {
             x: -30,
+            opacity: 1,
+            letterSpacing: "0.4em",
             ease: "none",
             scrollTrigger: {
-              trigger: section,
-              start: "top top",
-              end: () => `+=${getScrollAmount() * 1.25}`,
+              trigger: panel1Ref.current,
+              containerAnimation: scrollTween,
+              start: "left right",
+              end: "right left",
               scrub: 1.1,
             },
-          });
-        }
+          }
+        );
 
-        if (card3Ref.current) {
-          gsap.to(card3Ref.current, {
-            x: -35,
+        // 3D Staggered kinetic typography on headline lines
+        const p1Lines = [
+          { sel: ".p1-line-1", startX: 45, endX: -40, scaleStart: 0.96, scaleEnd: 1.05 },
+          { sel: ".p1-line-2", startX: 65, endX: -25, scaleStart: 1.0, scaleEnd: 1.0 },
+          { sel: ".p1-line-3", startX: 25, endX: -55, scaleStart: 1.0, scaleEnd: 1.0 },
+          { sel: ".p1-line-4", startX: 55, endX: -30, scaleStart: 0.98, scaleEnd: 1.04 },
+          { sel: ".p1-line-5", startX: 20, endX: -45, scaleStart: 1.0, scaleEnd: 1.0 },
+        ];
+
+        p1Lines.forEach(({ sel, startX, endX, scaleStart, scaleEnd }) => {
+          gsap.fromTo(
+            sel,
+            { x: startX, scale: scaleStart },
+            {
+              x: endX,
+              scale: scaleEnd,
+              ease: "none",
+              scrollTrigger: {
+                trigger: panel1Ref.current,
+                containerAnimation: scrollTween,
+                start: "left right",
+                end: "right left",
+                scrub: 1.2,
+              },
+            }
+          );
+        });
+
+        // Paragraph vertical & opacity parallax
+        gsap.fromTo(
+          ".p1-desc",
+          { y: 30, opacity: 0.4 },
+          {
+            y: -25,
+            opacity: 1,
             ease: "none",
             scrollTrigger: {
-              trigger: section,
-              start: "top top",
-              end: () => `+=${getScrollAmount() * 1.25}`,
-              scrub: 1.2,
+              trigger: panel1Ref.current,
+              containerAnimation: scrollTween,
+              start: "left right",
+              end: "right left",
+              scrub: 1,
             },
-          });
-        }
+          }
+        );
+      }
 
-        if (journeyCardRef.current) {
-          gsap.to(journeyCardRef.current, {
+      // ── PANEL 3: "WHO ARE WE? THE WHISPERING PINES BY FIRST KEY ESTATE" ──
+      if (panel3Ref.current) {
+        // Eyebrow with expanding gold lines
+        gsap.fromTo(
+          ".p3-bar-left",
+          { scaleX: 0.4, transformOrigin: "right center" },
+          {
+            scaleX: 1.4,
+            ease: "none",
+            scrollTrigger: {
+              trigger: panel3Ref.current,
+              containerAnimation: scrollTween,
+              start: "left right",
+              end: "right left",
+              scrub: 1,
+            },
+          }
+        );
+
+        gsap.fromTo(
+          ".p3-bar-right",
+          { scaleX: 0.4, transformOrigin: "left center" },
+          {
+            scaleX: 1.4,
+            ease: "none",
+            scrollTrigger: {
+              trigger: panel3Ref.current,
+              containerAnimation: scrollTween,
+              start: "left right",
+              end: "right left",
+              scrub: 1,
+            },
+          }
+        );
+
+        gsap.fromTo(
+          ".p3-eyebrow-text",
+          { y: 15, opacity: 0.6 },
+          {
+            y: -15,
+            opacity: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: panel3Ref.current,
+              containerAnimation: scrollTween,
+              start: "left right",
+              end: "right left",
+              scrub: 1,
+            },
+          }
+        );
+
+        // Counter-parallax on headline lines
+        gsap.fromTo(
+          ".p3-title-1",
+          { x: 50, y: 15 },
+          {
             x: -40,
+            y: -15,
             ease: "none",
             scrollTrigger: {
-              trigger: section,
-              start: "top top",
-              end: () => `+=${getScrollAmount() * 1.25}`,
+              trigger: panel3Ref.current,
+              containerAnimation: scrollTween,
+              start: "left right",
+              end: "right left",
+              scrub: 1.1,
+            },
+          }
+        );
+
+        gsap.fromTo(
+          ".p3-title-2",
+          { x: -35, scale: 0.94 },
+          {
+            x: 35,
+            scale: 1.05,
+            ease: "none",
+            scrollTrigger: {
+              trigger: panel3Ref.current,
+              containerAnimation: scrollTween,
+              start: "left right",
+              end: "right left",
+              scrub: 1.3,
+            },
+          }
+        );
+
+        // Body paragraph
+        gsap.fromTo(
+          ".p3-desc",
+          { y: 35, opacity: 0.45 },
+          {
+            y: -25,
+            opacity: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: panel3Ref.current,
+              containerAnimation: scrollTween,
+              start: "left right",
+              end: "right left",
+              scrub: 1,
+            },
+          }
+        );
+      }
+
+      // ── PANEL 5: "THE JOURNEY (2000 — PRESENT)" ──
+      if (journeyPanelRef.current) {
+        gsap.fromTo(
+          ".journey-eyebrow",
+          { x: 30, letterSpacing: "0.24em" },
+          {
+            x: -25,
+            letterSpacing: "0.38em",
+            ease: "none",
+            scrollTrigger: {
+              trigger: journeyPanelRef.current,
+              containerAnimation: scrollTween,
+              start: "left right",
+              end: "right left",
+              scrub: 1,
+            },
+          }
+        );
+
+        gsap.fromTo(
+          ".journey-title",
+          { x: 55, scale: 0.94 },
+          {
+            x: -45,
+            scale: 1.06,
+            ease: "none",
+            scrollTrigger: {
+              trigger: journeyPanelRef.current,
+              containerAnimation: scrollTween,
+              start: "left right",
+              end: "right left",
               scrub: 1.2,
             },
-          });
-        }
+          }
+        );
 
-        // ── 1. Hero Salon Photography Parallax ──
+        // 3 Staggered narrative era paragraphs
+        gsap.fromTo(
+          ".journey-p-1",
+          { x: 35, y: 15, opacity: 0.5 },
+          {
+            x: -25,
+            y: -15,
+            opacity: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: journeyPanelRef.current,
+              containerAnimation: scrollTween,
+              start: "left right",
+              end: "right left",
+              scrub: 1.1,
+            },
+          }
+        );
+
+        gsap.fromTo(
+          ".journey-p-2",
+          { x: -30, y: 25, opacity: 0.4 },
+          {
+            x: 25,
+            y: -20,
+            opacity: 0.95,
+            ease: "none",
+            scrollTrigger: {
+              trigger: journeyPanelRef.current,
+              containerAnimation: scrollTween,
+              start: "left right",
+              end: "right left",
+              scrub: 1.3,
+            },
+          }
+        );
+
+        gsap.fromTo(
+          ".journey-p-3",
+          { x: 40, y: 35, opacity: 0.5 },
+          {
+            x: -30,
+            y: -25,
+            opacity: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: journeyPanelRef.current,
+              containerAnimation: scrollTween,
+              start: "left right",
+              end: "right left",
+              scrub: 1.5,
+            },
+          }
+        );
+      }
+
+      // ── PANEL 7: REAL ESTATE DIRECTORY (01 - 10 CASCADE REVEAL) ──
+      if (optionsPanelRef.current) {
+        gsap.fromTo(
+          ".directory-row",
+          {
+            x: (i) => (i % 2 === 0 ? 45 + i * 3 : -35 - i * 3),
+            opacity: 0.25,
+          },
+          {
+            x: 0,
+            opacity: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: optionsPanelRef.current,
+              containerAnimation: scrollTween,
+              start: "left 85%",
+              end: "center center",
+              scrub: 1.2,
+            },
+          }
+        );
+      }
+
+      // ── 4. Image Panels Parallax ──
+      const mm = gsap.matchMedia();
+
+      // DESKTOP IMAGERY PARALLAX
+      mm.add("(min-width: 1024px)", () => {
+        // Hero Salon Photography
         if (heroPanelRef.current && imgZoomRef.current) {
           gsap.fromTo(
             imgZoomRef.current,
@@ -210,7 +464,7 @@ export default function AboutSection() {
           );
         }
 
-        // ── 2. Curated 3-Image Gallery Parallax ──
+        // 3-Image Gallery Parallax
         if (galleryPanelRef.current) {
           if (galleryImg1Ref.current) {
             gsap.fromTo(
@@ -272,7 +526,7 @@ export default function AboutSection() {
           }
         }
 
-        // ── 3. Post-Journey Full-Bleed & Desktop Overlapping Parallax ──
+        // Strip Photo Overlapping Parallax
         if (stripPanelRef.current) {
           if (stripBaseImgRef.current) {
             gsap.fromTo(
@@ -312,55 +566,16 @@ export default function AboutSection() {
               }
             );
           }
-
-          if (stripHeroBadgeRef.current) {
-            gsap.fromTo(
-              stripHeroBadgeRef.current,
-              { x: -25, y: 10 },
-              {
-                x: 35,
-                y: -10,
-                ease: "none",
-                scrollTrigger: {
-                  trigger: stripPanelRef.current,
-                  containerAnimation: scrollTween,
-                  start: "left right",
-                  end: "right left",
-                  scrub: 1.2,
-                },
-              }
-            );
-          }
         }
 
-        // ── 4. Full-Screen Options Directory Parallax ──
-        if (optionsPanelRef.current && optionsListRef.current) {
-          gsap.fromTo(
-            optionsListRef.current,
-            { y: 25, opacity: 0.92 },
-            {
-              y: -20,
-              opacity: 1,
-              ease: "none",
-              scrollTrigger: {
-                trigger: optionsPanelRef.current,
-                containerAnimation: scrollTween,
-                start: "left right",
-                end: "right left",
-                scrub: 1.1,
-              },
-            }
-          );
-        }
-
-        // ── 5. Final Hero Image Panel Parallax (Just like the first image) ──
+        // Final Hero Image Panel
         if (finalHeroPanelRef.current && finalImgZoomRef.current) {
           gsap.fromTo(
             finalImgZoomRef.current,
             { scale: 1.05, x: 45 },
             {
-              scale: 1.22,
-              x: -50,
+              scale: 1.2,
+              x: -45,
               ease: "none",
               scrollTrigger: {
                 trigger: finalHeroPanelRef.current,
@@ -372,32 +587,10 @@ export default function AboutSection() {
             }
           );
         }
-
-        if (finalHeroPanelRef.current && finalHeroBadgeRef.current) {
-          gsap.fromTo(
-            finalHeroBadgeRef.current,
-            { x: -20, y: 10 },
-            {
-              x: 35,
-              y: -10,
-              ease: "none",
-              scrollTrigger: {
-                trigger: finalHeroPanelRef.current,
-                containerAnimation: scrollTween,
-                start: "left right",
-                end: "right left",
-                scrub: 1.2,
-              },
-            }
-          );
-        }
       });
 
-      // ══════════════════════════════════════════════════════════════════════
-      // MOBILE (< 1024px): 100% Dead-Center Stability + Precision Active Parallax
-      // ══════════════════════════════════════════════════════════════════════
+      // MOBILE IMAGERY PARALLAX
       mm.add("(max-width: 1023px)", () => {
-        // Hero Salon Photo
         if (heroPanelRef.current && imgZoomRef.current) {
           gsap.fromTo(
             imgZoomRef.current,
@@ -416,7 +609,6 @@ export default function AboutSection() {
           );
         }
 
-        // Mobile 2-Image Gallery Parallax
         if (mobGalleryPanelRef.current) {
           if (mobGalleryImg1Ref.current) {
             gsap.fromTo(
@@ -456,7 +648,6 @@ export default function AboutSection() {
           }
         }
 
-        // Post-Journey Full-Bleed Photo
         if (stripPanelRef.current && stripBaseImgRef.current) {
           gsap.fromTo(
             stripBaseImgRef.current,
@@ -475,7 +666,6 @@ export default function AboutSection() {
           );
         }
 
-        // Final Hero Image Photo on Mobile
         if (finalHeroPanelRef.current && finalImgZoomRef.current) {
           gsap.fromTo(
             finalImgZoomRef.current,
@@ -495,7 +685,7 @@ export default function AboutSection() {
         }
       });
 
-      // ── 4. Touch & Horizontal Swipe Gesture Support (Mobile & Trackpad) ──
+      // ── 5. Responsive Touch & Horizontal Swipe Gesture Engine ──
       let touchStartX = 0;
       let touchStartY = 0;
       let touchLastX = 0;
@@ -516,9 +706,9 @@ export default function AboutSection() {
         const diffX = touchStartX - currentX;
         const diffY = touchStartY - currentY;
 
-        // Detect if the user is swiping horizontally
-        if (!isHorizontalGesture && (Math.abs(diffX) > 6 || Math.abs(diffY) > 6)) {
-          if (Math.abs(diffX) > Math.abs(diffY) * 0.7) {
+        // Detect if user intends a horizontal swipe gesture
+        if (!isHorizontalGesture && (Math.abs(diffX) > 5 || Math.abs(diffY) > 5)) {
+          if (Math.abs(diffX) > Math.abs(diffY) * 0.6) {
             isHorizontalGesture = true;
           }
         }
@@ -528,8 +718,9 @@ export default function AboutSection() {
           touchLastX = currentX;
 
           if (deltaX !== 0) {
+            // Enhanced swipe multiplier (1.75x) for immediate, natural horizontal scrolling
             window.scrollBy({
-              top: deltaX * 1.0,
+              top: deltaX * 1.75,
               behavior: "instant",
             });
           }
@@ -537,10 +728,10 @@ export default function AboutSection() {
       };
 
       const handleWheel = (e) => {
-        // Translate horizontal trackpad swipes (deltaX) into vertical scroll for horizontal pin
+        // Smooth trackpad horizontal gesture translation
         if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 1) {
           window.scrollBy({
-            top: e.deltaX * 1.0,
+            top: e.deltaX * 1.35,
             behavior: "instant",
           });
         }
@@ -585,7 +776,7 @@ export default function AboutSection() {
         </div>
       </div>
 
-      {/* ── PINNED FOREGROUND HORIZONTAL SCROLL TRACK (Moves at 1.0x speed) ── */}
+      {/* ── PINNED FOREGROUND HORIZONTAL SCROLL TRACK ── */}
       <div
         ref={trackRef}
         className="relative z-10 flex h-full w-max flex-nowrap will-change-transform"
@@ -593,22 +784,25 @@ export default function AboutSection() {
         {/* ════════════════════════════════════════════════════════════════ */}
         {/* PANEL 1: EDITORIAL TYPOGRAPHY (DEAD CENTER ON MOBILE & DESKTOP) */}
         {/* ════════════════════════════════════════════════════════════════ */}
-        <div className="relative w-screen lg:w-[50vw] h-full flex flex-col items-center justify-center p-5 xs:p-6 sm:p-10 lg:p-16 xl:p-20 bg-[#17171a] shrink-0 overflow-hidden text-center">
+        <div
+          ref={panel1Ref}
+          className="relative w-screen lg:w-[50vw] h-full flex flex-col items-center justify-center p-5 xs:p-6 sm:p-10 lg:p-16 xl:p-20 bg-[#17171a] shrink-0 overflow-hidden text-center"
+        >
           <div
             ref={card1Ref}
             className="relative z-10 w-full max-w-[88vw] xs:max-w-sm sm:max-w-md lg:max-w-xl xl:max-w-2xl mx-auto flex flex-col items-center text-center will-change-transform"
           >
             {/* Top Label */}
             <div className="mb-3 xs:mb-4 sm:mb-6">
-              <span className="text-[11px] xs:text-xs sm:text-sm font-bold tracking-[0.3em] sm:tracking-[0.35em] text-[#c9a96e] uppercase">
+              <span className="p1-eyebrow inline-block text-[11px] xs:text-xs sm:text-sm font-bold tracking-[0.3em] sm:tracking-[0.35em] text-[#c9a96e] uppercase will-change-transform">
                 FIRSTKEY HOUSING ESTATE
               </span>
             </div>
 
-            {/* Grand Bold Headline */}
+            {/* Grand Bold Headline with 3D Kinetic Multi-Plane Parallax */}
             <div className="text-3xl xs:text-4xl sm:text-5xl lg:text-[4.2rem] xl:text-[4.8rem] font-black leading-[0.98] sm:leading-[0.93] tracking-tight uppercase text-[#c9a96e] select-none space-y-1 sm:space-y-0.5 flex flex-col items-center mb-4 sm:mb-6">
               {/* Line 1: DISC◎VER */}
-              <div className="flex items-center justify-center">
+              <div className="p1-line-1 flex items-center justify-center will-change-transform">
                 <span>DISC</span>
                 <span className="inline-flex items-center justify-center relative w-[0.84em] h-[0.84em] mx-[0.06em] border-[2.5px] border-current rounded-full">
                   <span className="w-[0.44em] h-[0.44em] border-[2px] border-current rounded-full" />
@@ -617,17 +811,17 @@ export default function AboutSection() {
               </div>
 
               {/* Line 2: 18TH */}
-              <div>
+              <div className="p1-line-2 will-change-transform">
                 <span>18TH</span>
               </div>
 
               {/* Line 3: CENTURY */}
-              <div>
+              <div className="p1-line-3 will-change-transform">
                 <span>CENTURY</span>
               </div>
 
               {/* Line 4: RURAL LIFE */}
-              <div className="flex items-center justify-center space-x-2.5 xs:space-x-3.5 sm:space-x-4">
+              <div className="p1-line-4 flex items-center justify-center space-x-2.5 xs:space-x-3.5 sm:space-x-4 will-change-transform">
                 <span className="tracking-tight">RURAL</span>
                 <span className="tracking-normal flex items-baseline">
                   <span>L</span>
@@ -639,13 +833,13 @@ export default function AboutSection() {
               </div>
 
               {/* Line 5: IN PENN. */}
-              <div>
+              <div className="p1-line-5 will-change-transform">
                 <span>IN PENN.</span>
               </div>
             </div>
 
             {/* Paragraph Description */}
-            <p className="text-[11px] xs:text-xs sm:text-sm md:text-base text-white/90 font-medium leading-[1.7] max-w-xs xs:max-w-sm sm:max-w-lg mx-auto text-center">
+            <p className="p1-desc text-[11px] xs:text-xs sm:text-sm md:text-base text-white/90 font-medium leading-[1.7] max-w-xs xs:max-w-sm sm:max-w-lg mx-auto text-center will-change-transform">
               A historic house museum, the 1738 Wright&apos;s Ferry Mansion celebrates
               important examples of pre-1750 fine art, decorative arts, and architecture,
               as well as a multi-generational narrative reflective of Columbia,
@@ -689,30 +883,35 @@ export default function AboutSection() {
         {/* ════════════════════════════════════════════════════════════════ */}
         {/* PANEL 3: "WHO ARE WE?" (DEAD CENTER ON MOBILE & DESKTOP)         */}
         {/* ════════════════════════════════════════════════════════════════ */}
-        <div className="relative w-screen lg:w-[50vw] h-full flex flex-col items-center justify-center p-5 xs:p-6 sm:p-10 lg:p-16 xl:p-20 bg-[#17171a] shrink-0 overflow-hidden text-center">
+        <div
+          ref={panel3Ref}
+          className="relative w-screen lg:w-[50vw] h-full flex flex-col items-center justify-center p-5 xs:p-6 sm:p-10 lg:p-16 xl:p-20 bg-[#17171a] shrink-0 overflow-hidden text-center"
+        >
           <div
             ref={card3Ref}
             className="relative z-10 w-full max-w-[88vw] xs:max-w-sm sm:max-w-md lg:max-w-xl xl:max-w-2xl mx-auto flex flex-col items-center text-center will-change-transform"
           >
-            {/* Top Label with Centered Gold Accent */}
+            {/* Top Label with Symmetrical Expanding Gold Accents */}
             <div className="mb-3 xs:mb-4 sm:mb-6 flex items-center justify-center space-x-3">
-              <span className="w-6 sm:w-10 h-[2px] bg-[#c9a96e]" />
-              <span className="text-[11px] xs:text-xs sm:text-sm font-bold tracking-[0.3em] sm:tracking-[0.35em] text-[#c9a96e] uppercase whitespace-nowrap">
+              <span className="p3-bar-left w-6 sm:w-10 h-[2px] bg-[#c9a96e] inline-block will-change-transform" />
+              <span className="p3-eyebrow-text text-[11px] xs:text-xs sm:text-sm font-bold tracking-[0.3em] sm:tracking-[0.35em] text-[#c9a96e] uppercase whitespace-nowrap will-change-transform">
                 WHO ARE WE?
               </span>
-              <span className="w-6 sm:w-10 h-[2px] bg-[#c9a96e]" />
+              <span className="p3-bar-right w-6 sm:w-10 h-[2px] bg-[#c9a96e] inline-block will-change-transform" />
             </div>
 
-            {/* Grand Bold Unified Display Headline */}
+            {/* Grand Bold Unified Display Headline with Counter-Parallax */}
             <h2 className="text-2xl xs:text-3xl sm:text-4xl lg:text-[3.2rem] xl:text-[3.8rem] font-black leading-[1.08] tracking-tight uppercase text-white mb-3 xs:mb-4 sm:mb-6">
-              THE WHISPERING PINES <br />
-              <span className="text-[#c9a96e] font-black text-xl xs:text-2xl sm:text-3xl lg:text-[2.7rem] xl:text-[3.3rem] block mt-1 sm:mt-2">
+              <span className="p3-title-1 block will-change-transform">
+                THE WHISPERING PINES
+              </span>
+              <span className="p3-title-2 text-[#c9a96e] font-black text-xl xs:text-2xl sm:text-3xl lg:text-[2.7rem] xl:text-[3.3rem] block mt-1 sm:mt-2 will-change-transform">
                 BY FIRST KEY ESTATE
               </span>
             </h2>
 
-            {/* Exact Paragraph Provided by User */}
-            <p className="text-[11px] xs:text-xs sm:text-sm md:text-base text-white/90 font-medium leading-[1.7] sm:leading-[1.8] max-w-xs xs:max-w-sm sm:max-w-lg mx-auto text-center">
+            {/* Narrative Paragraph */}
+            <p className="p3-desc text-[11px] xs:text-xs sm:text-sm md:text-base text-white/90 font-medium leading-[1.7] sm:leading-[1.8] max-w-xs xs:max-w-sm sm:max-w-lg mx-auto text-center will-change-transform">
               First Key Estate is dedicated to creating thoughtfully designed communities that combine modern living with lasting value. The Whispering Pines reflects this vision, offering a peaceful residential environment surrounded by nature, quality craftsmanship, and contemporary amenities. Every home is planned with attention to detail, ensuring comfort, functionality, and an exceptional lifestyle for homeowners and investors alike.
             </p>
           </div>
@@ -726,7 +925,7 @@ export default function AboutSection() {
           className="hidden lg:flex relative w-[65vw] xl:w-[60vw] h-full items-center justify-center p-10 lg:p-14 xl:p-16 bg-[#f8f7f4] text-[#17171a] shrink-0"
         >
           <div className="w-full h-full max-h-[82vh] flex items-center justify-center gap-10 xl:gap-14 my-auto">
-            
+
             {/* Left: 2 Overlapping Images */}
             <div className="relative w-[56%] h-[85%] flex items-center justify-center">
               {/* Base Image 1 */}
@@ -806,7 +1005,7 @@ export default function AboutSection() {
           className="flex lg:hidden relative w-screen h-full items-center justify-center p-5 xs:p-7 bg-[#f8f7f4] text-[#17171a] shrink-0"
         >
           <div className="relative w-full h-full max-h-[75vh] xs:max-h-[80vh] flex items-center justify-center my-auto">
-            
+
             {/* Base Image 1 (Residence Exterior) */}
             <div
               ref={mobGalleryImg1Ref}
@@ -825,7 +1024,7 @@ export default function AboutSection() {
               </div>
             </div>
 
-            {/* Overlapping Image 2 (Living Sanctuary - Offset Bottom-Right) */}
+            {/* Overlapping Image 2 (Living Sanctuary) */}
             <div
               ref={mobGalleryImg2Ref}
               className="absolute -bottom-3 -right-2 xs:-bottom-4 xs:-right-4 w-[62%] xs:w-[60%] h-[52%] xs:h-[50%] rounded-2xl overflow-hidden shadow-[0_25px_60px_rgba(23,23,26,0.22)] border-2 border-[#c9a96e] z-20 bg-[#f8f7f4] will-change-transform"
@@ -849,7 +1048,10 @@ export default function AboutSection() {
         {/* ════════════════════════════════════════════════════════════════ */}
         {/* PANEL: "THE JOURNEY" (DEAD CENTER ON MOBILE & DESKTOP)           */}
         {/* ════════════════════════════════════════════════════════════════ */}
-        <div className="relative w-screen lg:w-[68vw] xl:w-[62vw] h-full flex flex-col justify-center items-center p-5 xs:p-6 sm:p-10 lg:p-16 xl:p-20 bg-[#17171a] shrink-0 text-center overflow-hidden">
+        <div
+          ref={journeyPanelRef}
+          className="relative w-screen lg:w-[68vw] xl:w-[62vw] h-full flex flex-col justify-center items-center p-5 xs:p-6 sm:p-10 lg:p-16 xl:p-20 bg-[#17171a] shrink-0 text-center overflow-hidden"
+        >
           <div
             ref={journeyCardRef}
             className="relative z-10 w-full max-w-[88vw] xs:max-w-sm sm:max-w-md lg:max-w-2xl xl:max-w-3xl mx-auto flex flex-col items-center text-center will-change-transform"
@@ -857,26 +1059,26 @@ export default function AboutSection() {
             {/* Top Label */}
             <div className="mb-3 xs:mb-4 sm:mb-6 flex items-center justify-center space-x-3">
               <span className="w-6 sm:w-10 h-[2px] bg-[#c9a96e]" />
-              <span className="text-[10px] xs:text-xs sm:text-sm font-bold tracking-[0.25em] sm:tracking-[0.35em] text-[#c9a96e] uppercase whitespace-nowrap">
+              <span className="journey-eyebrow inline-block text-[10px] xs:text-xs sm:text-sm font-bold tracking-[0.25em] sm:tracking-[0.35em] text-[#c9a96e] uppercase whitespace-nowrap will-change-transform">
                 FIRST KEY ESTATE • 2000 — PRESENT
               </span>
               <span className="w-6 sm:w-10 h-[2px] bg-[#c9a96e]" />
             </div>
 
             {/* Grand Headline: THE JOURNEY */}
-            <h2 className="text-3xl xs:text-4xl sm:text-5xl lg:text-[4.2rem] xl:text-[4.8rem] font-black uppercase text-white leading-[1.0] sm:leading-[0.98] tracking-tight mb-3 xs:mb-4 sm:mb-6">
+            <h2 className="journey-title text-3xl xs:text-4xl sm:text-5xl lg:text-[4.2rem] xl:text-[4.8rem] font-black uppercase text-white leading-[1.0] sm:leading-[0.98] tracking-tight mb-3 xs:mb-4 sm:mb-6 will-change-transform">
               THE JOURNEY
             </h2>
 
             {/* Comprehensive Multi-Era Journey Narrative */}
             <div className="space-y-2.5 xs:space-y-3 sm:space-y-4 text-[11px] xs:text-xs sm:text-sm md:text-[1.05rem] text-white/90 font-medium leading-[1.65] sm:leading-[1.8] max-w-xs xs:max-w-sm sm:max-w-xl mx-auto text-center">
-              <p>
+              <p className="journey-p-1 will-change-transform">
                 Founded at the turn of the millennium in 2000, First Key Estate was born with a single enduring mission: to create thoughtfully designed residential communities that combine modern living with lasting value and architectural integrity.
               </p>
-              <p className="text-white/80">
+              <p className="journey-p-2 text-white/80 will-change-transform">
                 Over the past two decades, our journey expanded from boutique residential enclaves to comprehensive masterplanned developments. We pioneered nature-integrated planning, preserving mature green landscapes and incorporating sustainable infrastructure, quality craftsmanship, and contemporary amenities across every project.
               </p>
-              <p className="text-[#c9a96e] font-semibold">
+              <p className="journey-p-3 text-[#c9a96e] font-semibold will-change-transform">
                 Today, that vision culminates in flagship sanctuary retreats like The Whispering Pines—providing homeowners and investors with peaceful living environments, unmatched comfort, and a lasting generational legacy.
               </p>
             </div>
@@ -886,13 +1088,12 @@ export default function AboutSection() {
 
         {/* ════════════════════════════════════════════════════════════════ */}
         {/* PANEL: POST-JOURNEY ARCHITECTURAL STRIP                          */}
-        {/* (Mobile: Pure full-bleed image | Desktop: Center overlapping)    */}
         {/* ════════════════════════════════════════════════════════════════ */}
         <div
           ref={stripPanelRef}
           className="relative w-screen lg:w-[50vw] xl:w-[50vw] h-full overflow-visible bg-[#121214] shrink-0"
         >
-          {/* ── Main Big Image (Touches Top and Bottom 100%) ── */}
+          {/* Main Big Image */}
           <div className="relative w-full h-full overflow-hidden">
             <img
               ref={stripBaseImgRef}
@@ -913,7 +1114,7 @@ export default function AboutSection() {
             </div>
           </div>
 
-          {/* ── Small Image: DESKTOP ONLY (hidden lg:block on mobile to prevent cutoffs) ── */}
+          {/* Small Overlapping Photo: DESKTOP ONLY */}
           <div
             ref={stripOverlapImgRef}
             className="hidden lg:block absolute top-1/2 -translate-y-1/2 -left-28 xl:-left-32 w-[28vw] xl:w-[25vw] h-[52vh] rounded-2xl overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.9)] z-30 bg-[#121214] will-change-transform"
@@ -924,7 +1125,7 @@ export default function AboutSection() {
               className="w-full h-full object-cover object-center filter brightness-[0.98]"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent pointer-events-none" />
-            
+
             {/* Badge on Small Photo */}
             <div className="absolute bottom-3 left-3 z-20">
               <span className="text-[8px] xs:text-[9px] font-mono tracking-widest text-[#c9a96e] uppercase bg-[#17171a]/95 backdrop-blur-md px-2.5 py-1 rounded border border-[#c9a96e]/40 shadow-lg">
@@ -949,7 +1150,7 @@ export default function AboutSection() {
             {REAL_ESTATE_OPTIONS.map((item, index) => (
               <div
                 key={item.id}
-                className={`group flex items-center py-2 xs:py-2.5 sm:py-3.5 md:py-4 lg:py-4.5 border-t border-[#17171a]/15 cursor-pointer transition-colors duration-300 hover:bg-[#17171a]/[0.02] w-full flex-1 ${
+                className={`directory-row group flex items-center py-2 xs:py-2.5 sm:py-3.5 md:py-4 lg:py-4.5 border-t border-[#17171a]/15 cursor-pointer transition-colors duration-300 hover:bg-[#17171a]/[0.02] w-full flex-1 will-change-transform ${
                   index === REAL_ESTATE_OPTIONS.length - 1 ? "border-b" : ""
                 }`}
               >

@@ -5,85 +5,182 @@ import { useGSAP } from "../utils/useGSAP";
 
 gsap.registerPlugin(ScrollTrigger);
 
+// High-resolution luxury architectural villa matching reference visual
+const ESTATE_IMAGE =
+  "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=2000&q=85";
+
 export default function InquirySection() {
   const sectionRef = useRef(null);
-  const eyebrowRef = useRef(null);
-  const headlineRef = useRef(null);
-  const keyIconRef = useRef(null);
-  const formRef = useRef(null);
-  const buttonRef = useRef(null);
+  const formCardRef = useRef(null);
+  const rightColRef = useRef(null);
+  const parallaxImgRef = useRef(null);
 
   const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
+    name: "",
     phone: "",
-    residenceType: "",
-    timeline: "",
-    budgetRange: "",
-    consultationType: "",
-    message: "",
+    budget: "",
+    location: "",
+    reason: "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // GSAP ScrollTrigger Rise-Up (Comes-Up) Animations
+  // GSAP ScrollTrigger Entrance & Parallax Animations (Responsive for Desktop & Mobile)
   useGSAP(
     () => {
       const section = sectionRef.current;
       if (!section) return;
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: "top 75%",
-          toggleActions: "play none none none",
-        },
+      const mm = gsap.matchMedia();
+
+      // ── DESKTOP ANIMATIONS (>= 1024px) ──
+      mm.add("(min-width: 1024px)", () => {
+        const entranceTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "top 75%",
+            toggleActions: "play none none none",
+          },
+        });
+
+        // Right Column 50% Image slides in smoothly from the right
+        entranceTl.fromTo(
+          rightColRef.current,
+          { xPercent: 100, opacity: 0.1 },
+          { xPercent: 0, opacity: 1, duration: 1.3, ease: "power3.out" },
+          0
+        );
+
+        // Left Column Elements Staggered Entrance
+        entranceTl
+          .fromTo(
+            ".inquiry-eyebrow",
+            { y: 30, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
+            0.1
+          )
+          .fromTo(
+            ".inquiry-title",
+            { y: 35, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.85, ease: "power3.out" },
+            0.2
+          )
+          .fromTo(
+            ".inquiry-subtitle",
+            { y: 25, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.75, ease: "power3.out" },
+            0.3
+          )
+          .fromTo(
+            ".inquiry-field-row",
+            { y: 30, opacity: 0 },
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.7,
+              stagger: 0.1,
+              ease: "power3.out",
+            },
+            0.4
+          )
+          .fromTo(
+            ".inquiry-actions",
+            { y: 25, opacity: 0, scale: 0.95 },
+            { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.4)" },
+            0.7
+          );
+
+        // Desktop Parallax Scroll Scrub
+        if (parallaxImgRef.current) {
+          gsap.fromTo(
+            parallaxImgRef.current,
+            { yPercent: -10 },
+            {
+              yPercent: 10,
+              ease: "none",
+              scrollTrigger: {
+                trigger: section,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: true,
+              },
+            }
+          );
+        }
       });
 
-      // 1. Eyebrow & Headline rise up
-      tl.fromTo(
-        eyebrowRef.current,
-        { y: 40, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.9, ease: "power3.out" }
-      );
+      // ── MOBILE & TABLET ANIMATIONS (< 1024px) ──
+      mm.add("(max-width: 1023px)", () => {
+        const mobTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
+        });
 
-      tl.fromTo(
-        headlineRef.current,
-        { y: 55, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1.1, ease: "power3.out" },
-        "-=0.7"
-      );
+        mobTl
+          .fromTo(
+            ".inquiry-eyebrow",
+            { y: 25, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" }
+          )
+          .fromTo(
+            ".inquiry-title",
+            { y: 30, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
+            "-=0.5"
+          )
+          .fromTo(
+            ".inquiry-subtitle",
+            { y: 20, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
+            "-=0.5"
+          )
+          .fromTo(
+            ".inquiry-field-row",
+            { y: 30, opacity: 0 },
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.65,
+              stagger: 0.1,
+              ease: "power3.out",
+            },
+            "-=0.4"
+          )
+          .fromTo(
+            ".inquiry-actions",
+            { y: 25, opacity: 0, scale: 0.95 },
+            { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.4)" },
+            "-=0.3"
+          )
+          .fromTo(
+            rightColRef.current,
+            { y: 50, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.9, ease: "power3.out" },
+            "-=0.4"
+          );
 
-      // 2. First Key Emblem reveals
-      tl.fromTo(
-        keyIconRef.current,
-        { scale: 0.85, opacity: 0, y: 20 },
-        { scale: 1, opacity: 1, y: 0, duration: 0.9, ease: "power3.out" },
-        "-=0.7"
-      );
-
-      // 3. Underline Form Fields stagger up cleanly
-      tl.fromTo(
-        ".inquiry-field",
-        { y: 35, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.85,
-          stagger: 0.08,
-          ease: "power3.out",
-        },
-        "-=0.6"
-      );
-
-      // 4. Center Button rises up
-      tl.fromTo(
-        buttonRef.current,
-        { y: 30, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.9, ease: "power3.out" },
-        "-=0.5"
-      );
+        // Mobile Parallax
+        if (parallaxImgRef.current) {
+          gsap.fromTo(
+            parallaxImgRef.current,
+            { yPercent: -8 },
+            {
+              yPercent: 8,
+              ease: "none",
+              scrollTrigger: {
+                trigger: section,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: true,
+              },
+            }
+          );
+        }
+      });
     },
     { scope: sectionRef }
   );
@@ -93,9 +190,19 @@ export default function InquirySection() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleReset = () => {
+    setFormData({
+      name: "",
+      phone: "",
+      budget: "",
+      location: "",
+      reason: "",
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.fullName || !formData.email) return;
+    if (!formData.name || !formData.phone) return;
 
     setIsSubmitting(true);
     setTimeout(() => {
@@ -104,270 +211,210 @@ export default function InquirySection() {
     }, 850);
   };
 
-  const handleReset = () => {
+  const handleNewInquiry = () => {
+    handleReset();
     setIsSubmitted(false);
-    setFormData({
-      fullName: "",
-      email: "",
-      phone: "",
-      residenceType: "",
-      timeline: "",
-      budgetRange: "",
-      consultationType: "",
-      message: "",
-    });
   };
 
   return (
     <section
       ref={sectionRef}
       id="inquiry"
-      className="relative w-full min-h-screen min-h-[100dvh] flex flex-col justify-center items-center bg-[#17171a] text-white py-14 xs:py-20 sm:py-32 lg:py-40 px-4 xs:px-6 sm:px-16 lg:px-24 select-none overflow-hidden font-sans border-t border-[#c9a96e]/20"
+      className="relative w-full min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-[#121215] text-white border-t border-[#c9a96e]/20 overflow-hidden select-none"
     >
-      {/* Background Architectural Ambient Glow & Grid Pattern */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(201,169,110,0.06),transparent_65%)] pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.02)_1px,transparent_1px)] [background-size:48px_48px] pointer-events-none opacity-30" />
+      {/* ═══════════════════════════════════════════════════════════════════
+          LEFT / TOP PARTITION: Form Container (Spacious Inset on Mobile)
+      ═══════════════════════════════════════════════════════════════════ */}
+      <div
+        ref={formCardRef}
+        className="w-full min-h-full flex flex-col justify-center items-center px-10 xs:px-12 sm:px-16 md:px-20 lg:px-12 xl:px-16 py-18 sm:py-24 bg-[#121215] relative z-10"
+      >
+        {/* Centered Form Wrapper with Extra Margin Inset */}
+        <div className="w-full max-w-[360px] xs:max-w-[400px] sm:max-w-[480px] mx-auto flex flex-col items-center justify-center">
 
-      <div className="relative z-10 w-full max-w-[1520px] mx-auto flex flex-col items-center justify-center my-auto">
+          {/* 1. Symmetrical Eyebrow Tag: — FIRSTKEY HOUSING ESTATE — */}
+          <div className="inquiry-eyebrow flex items-center justify-center gap-3 mb-3.5 sm:mb-4">
+            <span className="w-6 sm:w-8 h-[1.5px] bg-[#c9a96e]" />
+            <span className="text-[10px] sm:text-xs font-mono tracking-[0.24em] text-[#c9a96e] uppercase font-bold text-center">
+              FIRSTKEY HOUSING ESTATE
+            </span>
+            <span className="w-6 sm:w-8 h-[1.5px] bg-[#c9a96e]" />
+          </div>
 
-        {/* ── 1. Brand Eyebrow Tag ── */}
-        <div
-          ref={eyebrowRef}
-          className="flex items-center justify-center space-x-2.5 xs:space-x-3 mb-3.5 xs:mb-4 sm:mb-5 will-change-transform px-2"
-        >
-          <span className="w-5 xs:w-8 sm:w-12 h-[2px] bg-[#c9a96e]" />
-          <span className="text-[9px] xs:text-[10px] sm:text-xs font-sans tracking-[0.24em] xs:tracking-[0.35em] text-[#c9a96e] uppercase font-bold text-center">
-            FIRST KEY ESTATE &bull; PRIVATE CLIENT SERVICES
-          </span>
-          <span className="w-5 xs:w-8 sm:w-12 h-[2px] bg-[#c9a96e]" />
-        </div>
+          {/* 2. Headline: Discover 18th Century Rural Life In Penn. */}
+          <h2 className="inquiry-title text-2xl xs:text-3xl sm:text-[36px] lg:text-[40px] font-serif text-white tracking-tight font-normal leading-[1.18] mb-3 text-center max-w-md mx-auto">
+            Discover 18th Century Rural Life In Penn.
+          </h2>
 
-        {/* ── 2. Grand Centered Headline ── */}
-        <h2
-          ref={headlineRef}
-          className="text-2xl xs:text-3xl sm:text-5xl lg:text-[4.5rem] xl:text-[5.2rem] font-serif font-normal tracking-tight leading-[1.12] sm:leading-[1.08] text-white text-center will-change-transform max-w-4xl px-2"
-        >
-          Join The Whispering Pines Sanctuary
-        </h2>
-
-        {/* ── 3. First Key Estate Gold Emblem ── */}
-        <div
-          ref={keyIconRef}
-          className="my-5 xs:my-8 sm:my-12 lg:my-14 flex items-center justify-center will-change-transform"
-        >
-          <svg
-            className="w-11 h-6 xs:w-13 xs:h-7 sm:w-16 sm:h-8 text-[#c9a96e]"
-            viewBox="0 0 64 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            {/* Diamond Key Head */}
-            <polygon points="12,4 20,12 12,20 4,12" />
-            <circle cx="12" cy="12" r="3" />
-            {/* Key Stem */}
-            <line x1="20" y1="12" x2="56" y2="12" />
-            {/* Key Teeth */}
-            <line x1="44" y1="12" x2="44" y2="18" />
-            <line x1="52" y1="12" x2="52" y2="19" />
-          </svg>
-        </div>
-
-        {/* ── 4. Main Interactive Form (Symmetrical 2-Column Luxury Grid) ── */}
-        <div className="w-full max-w-5xl mx-auto px-1">
+          {/* 3. Subtitle: Exact 2-Line Reference Description */}
+          <p className="inquiry-subtitle text-xs sm:text-[13px] text-white/70 font-sans leading-relaxed mb-8 sm:mb-10 max-w-sm sm:max-w-md mx-auto text-center">
+            A historic house museum celebrating pre-1750 fine art, architecture, and enduring regional narrative.
+          </p>
+          <br /><br /><br />
           {isSubmitted ? (
-            /* Success Confirmation Screen */
-            <div className="py-10 xs:py-14 sm:py-20 flex flex-col items-center justify-center text-center space-y-4 xs:space-y-6">
-              <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-full border-2 border-[#c9a96e] flex items-center justify-center text-[#c9a96e] text-2xl sm:text-3xl font-serif">
+            /* Success Feedback State */
+            <div className="w-full py-10 px-6 border border-[#c9a96e]/30 bg-[#17171c]/90 rounded-none flex flex-col items-center text-center gap-4">
+              <div className="w-12 h-12 border border-[#c9a96e] flex items-center justify-center text-[#c9a96e] text-2xl font-serif">
                 ✓
               </div>
-              <h3 className="text-2xl xs:text-3xl sm:text-5xl font-serif text-white tracking-tight">
-                Inquiry Successfully Registered
+              <h3 className="text-xl sm:text-2xl font-serif text-white">
+                Inquiry Registered
               </h3>
-              <p className="text-xs xs:text-sm sm:text-base lg:text-lg text-white/80 max-w-xl mx-auto leading-relaxed">
-                Thank you, <span className="text-[#c9a96e] font-semibold">{formData.fullName}</span>. Your private dossier for The Whispering Pines has been initiated. A Senior Estate Director will connect with you via {formData.email} within 24 hours.
+              <p className="text-xs sm:text-sm text-white/75 leading-relaxed max-w-sm">
+                Thank you, <span className="text-[#c9a96e] font-semibold">{formData.name}</span>. Your private dossier for <span className="text-white font-medium">{formData.location || "The Sanctuary"}</span> has been recorded. An Estate Director will connect via <span className="text-white font-medium">{formData.phone}</span> shortly.
               </p>
               <button
-                onClick={handleReset}
-                className="mt-4 sm:mt-6 px-8 sm:px-10 py-3 sm:py-3.5 border border-[#c9a96e] text-[10px] sm:text-xs font-mono tracking-[0.25em] uppercase text-[#c9a96e] hover:bg-[#c9a96e] hover:text-[#17171a] transition-all duration-300 cursor-pointer font-bold"
+                type="button"
+                onClick={handleNewInquiry}
+                className="mt-3 px-8 py-3 border border-[#c9a96e] text-xs font-mono tracking-[0.2em] uppercase text-[#c9a96e] hover:bg-[#c9a96e] hover:text-[#121215] transition-all duration-300 cursor-pointer font-semibold rounded-none"
               >
-                SUBMIT ANOTHER INQUIRY
+                SUBMIT ANOTHER RESPONSE
               </button>
             </div>
           ) : (
-            <form
-              ref={formRef}
-              onSubmit={handleSubmit}
-              className="w-full flex flex-col items-center"
-            >
-              {/* 4 Balanced Symmetrical Rows (2 Columns each) */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 md:gap-x-14 lg:gap-x-20 xl:gap-x-28 gap-y-6 xs:gap-y-8 sm:gap-y-12 w-full mb-2 sm:mb-4">
+            <form onSubmit={handleSubmit} className="w-full flex flex-col gap-6 sm:gap-7 items-center">
 
-                {/* ── ROW 1: FULL NAME & EMAIL ── */}
-                <div className="inquiry-field flex flex-col space-y-1.5 xs:space-y-2 will-change-transform">
-                  <label className="text-[9px] xs:text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] sm:tracking-[0.25em] text-[#c9a96e] font-semibold">
-                    FULL NAME *
+              {/* ── 2 BY 2 GRID: NAME, PHONE, BUDGET, LOCATION ── */}
+              <div className="inquiry-field-row grid grid-cols-2 gap-x-5 sm:gap-x-8 gap-y-5 sm:gap-y-6 w-full">
+
+                {/* 1. NAME * */}
+                <div className="relative flex flex-col group">
+                  <label className="text-[10px] sm:text-[11px] font-mono tracking-[0.16em] uppercase text-[#c9a96e] mb-1 flex items-center gap-1 font-semibold">
+                    NAME <span className="text-[#c9a96e] font-bold">*</span>
                   </label>
-                  <input
-                    type="text"
-                    name="fullName"
-                    required
-                    value={formData.fullName}
-                    onChange={handleChange}
-                    placeholder="e.g. Eleanor Vance"
-                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-xs xs:text-sm sm:text-base text-white outline-none transition-colors duration-300 placeholder:text-white/25"
-                  />
+                  <div className="relative w-full pb-0.5">
+                    <input
+                      type="text"
+                      name="name"
+                      required
+                      value={formData.name}
+                      onChange={handleChange}
+                      placeholder="Your full name"
+                      className="w-full appearance-none rounded-none border-0 border-b border-white/20 focus:border-[#c9a96e] bg-transparent py-1.5 text-xs sm:text-sm text-white placeholder:text-white/30 outline-none transition-colors duration-300 font-sans"
+                    />
+                    <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#c9a96e] transition-all duration-300 group-focus-within:w-full" />
+                  </div>
                 </div>
 
-                <div className="inquiry-field flex flex-col space-y-1.5 xs:space-y-2 will-change-transform">
-                  <label className="text-[9px] xs:text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] sm:tracking-[0.25em] text-[#c9a96e] font-semibold">
-                    EMAIL ADDRESS *
+                {/* 2. PHONE * */}
+                <div className="relative flex flex-col group">
+                  <label className="text-[10px] sm:text-[11px] font-mono tracking-[0.16em] uppercase text-[#c9a96e] mb-1 flex items-center gap-1 font-semibold">
+                    PHONE <span className="text-[#c9a96e] font-bold">*</span>
                   </label>
-                  <input
-                    type="email"
-                    name="email"
-                    required
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="e.g. eleanor@vancecapital.com"
-                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-xs xs:text-sm sm:text-base text-white outline-none transition-colors duration-300 placeholder:text-white/25"
-                  />
+                  <div className="relative w-full pb-0.5">
+                    <input
+                      type="tel"
+                      name="phone"
+                      required
+                      value={formData.phone}
+                      onChange={handleChange}
+                      placeholder="e.g. +1 (555) 234"
+                      className="w-full appearance-none rounded-none border-0 border-b border-white/20 focus:border-[#c9a96e] bg-transparent py-1.5 text-xs sm:text-sm text-white placeholder:text-white/30 outline-none transition-colors duration-300 font-sans"
+                    />
+                    <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#c9a96e] transition-all duration-300 group-focus-within:w-full" />
+                  </div>
                 </div>
 
-                {/* ── ROW 2: PHONE & RESIDENCE COLLECTION ── */}
-                <div className="inquiry-field flex flex-col space-y-1.5 xs:space-y-2 will-change-transform">
-                  <label className="text-[9px] xs:text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] sm:tracking-[0.25em] text-[#c9a96e] font-semibold">
-                    PHONE NUMBER
+                {/* 3. BUDGET */}
+                <div className="relative flex flex-col group">
+                  <label className="text-[10px] sm:text-[11px] font-mono tracking-[0.16em] uppercase text-[#c9a96e] mb-1 font-semibold">
+                    BUDGET
                   </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    placeholder="e.g. +1 (555) 019-2834"
-                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-xs xs:text-sm sm:text-base text-white outline-none transition-colors duration-300 placeholder:text-white/25"
-                  />
+                  <div className="relative w-full pb-0.5">
+                    <input
+                      type="text"
+                      name="budget"
+                      value={formData.budget}
+                      onChange={handleChange}
+                      placeholder="e.g. $3M – $6M+"
+                      className="w-full appearance-none rounded-none border-0 border-b border-white/20 focus:border-[#c9a96e] bg-transparent py-1.5 text-xs sm:text-sm text-white placeholder:text-white/30 outline-none transition-colors duration-300 font-sans"
+                    />
+                    <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#c9a96e] transition-all duration-300 group-focus-within:w-full" />
+                  </div>
                 </div>
 
-                <div className="inquiry-field flex flex-col space-y-1.5 xs:space-y-2 will-change-transform">
-                  <label className="text-[9px] xs:text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] sm:tracking-[0.25em] text-[#c9a96e] font-semibold">
-                    RESIDENCE COLLECTION
+                {/* 4. LOCATION */}
+                <div className="relative flex flex-col group">
+                  <label className="text-[10px] sm:text-[11px] font-mono tracking-[0.16em] uppercase text-[#c9a96e] mb-1 font-semibold">
+                    LOCATION
                   </label>
-                  <select
-                    name="residenceType"
-                    value={formData.residenceType}
-                    onChange={handleChange}
-                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-xs xs:text-sm sm:text-base text-white outline-none transition-colors duration-300 cursor-pointer [&>option]:bg-[#17171a] [&>option]:text-white"
-                  >
-                    <option value="">SELECT COLLECTION...</option>
-                    <option value="LUXURY VILLA">LUXURY VILLA</option>
-                    <option value="RESIDENTIAL SUITE">RESIDENTIAL SUITE</option>
-                    <option value="PRIVATE ESTATE">PRIVATE ESTATE</option>
-                    <option value="BOTANICAL SANCTUARY">BOTANICAL SANCTUARY</option>
-                    <option value="INVESTMENT PORTFOLIO">INVESTMENT PORTFOLIO</option>
-                  </select>
-                </div>
-
-                {/* ── ROW 3: TIMELINE & BUDGET RANGE ── */}
-                <div className="inquiry-field flex flex-col space-y-1.5 xs:space-y-2 will-change-transform">
-                  <label className="text-[9px] xs:text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] sm:tracking-[0.25em] text-[#c9a96e] font-semibold">
-                    INTENDED TIMELINE
-                  </label>
-                  <select
-                    name="timeline"
-                    value={formData.timeline}
-                    onChange={handleChange}
-                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-xs xs:text-sm sm:text-base text-white outline-none transition-colors duration-300 cursor-pointer [&>option]:bg-[#17171a] [&>option]:text-white"
-                  >
-                    <option value="">SELECT TIMELINE...</option>
-                    <option value="IMMEDIATE (MOVE-IN READY)">IMMEDIATE (MOVE-IN READY)</option>
-                    <option value="WITHIN 3-6 MONTHS">WITHIN 3-6 MONTHS</option>
-                    <option value="Q3/Q4 PRE-CONSTRUCTION">Q3/Q4 PRE-CONSTRUCTION</option>
-                    <option value="PORTFOLIO ADVISORY">PORTFOLIO ADVISORY</option>
-                  </select>
-                </div>
-
-                <div className="inquiry-field flex flex-col space-y-1.5 xs:space-y-2 will-change-transform">
-                  <label className="text-[9px] xs:text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] sm:tracking-[0.25em] text-[#c9a96e] font-semibold">
-                    INVESTMENT RANGE
-                  </label>
-                  <select
-                    name="budgetRange"
-                    value={formData.budgetRange}
-                    onChange={handleChange}
-                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-xs xs:text-sm sm:text-base text-white outline-none transition-colors duration-300 cursor-pointer [&>option]:bg-[#17171a] [&>option]:text-white"
-                  >
-                    <option value="">SELECT BUDGET RANGE...</option>
-                    <option value="$1.5M – $3.0M">$1,500,000 – $3,000,000</option>
-                    <option value="$3.0M – $6.0M">$3,000,000 – $6,000,000</option>
-                    <option value="$6.0M – $10.0M+">$6,000,000 – $10,000,000+</option>
-                    <option value="BESPOKE ESTATE ALLOCATION">BESPOKE ESTATE ALLOCATION</option>
-                  </select>
-                </div>
-
-                {/* ── ROW 4: CONSULTATION TYPE & BESPOKE NOTES ── */}
-                <div className="inquiry-field flex flex-col space-y-1.5 xs:space-y-2 will-change-transform">
-                  <label className="text-[9px] xs:text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] sm:tracking-[0.25em] text-[#c9a96e] font-semibold">
-                    PREFERRED CONSULTATION
-                  </label>
-                  <select
-                    name="consultationType"
-                    value={formData.consultationType}
-                    onChange={handleChange}
-                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-xs xs:text-sm sm:text-base text-white outline-none transition-colors duration-300 cursor-pointer [&>option]:bg-[#17171a] [&>option]:text-white"
-                  >
-                    <option value="">SELECT FORMAT...</option>
-                    <option value="PRIVATE ON-SITE TOUR">PRIVATE ON-SITE TOUR</option>
-                    <option value="VIRTUAL VIP PRESENTATION">VIRTUAL VIP PRESENTATION</option>
-                    <option value="DIRECT EXECUTIVE PHONE CALL">DIRECT EXECUTIVE PHONE CALL</option>
-                    <option value="COURIER BESPOKE DOSSIER">COURIER BESPOKE DOSSIER</option>
-                  </select>
-                </div>
-
-                <div className="inquiry-field flex flex-col space-y-1.5 xs:space-y-2 will-change-transform">
-                  <label className="text-[9px] xs:text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] sm:tracking-[0.25em] text-[#c9a96e] font-semibold">
-                    BESPOKE INQUIRY NOTES OR QUESTIONS
-                  </label>
-                  <input
-                    type="text"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    placeholder="e.g. Preferred villa layout, pool..."
-                    className="w-full bg-transparent border-b border-white/20 focus:border-[#c9a96e] py-2 xs:py-2.5 sm:py-3 text-xs xs:text-sm sm:text-base text-white outline-none transition-colors duration-300 placeholder:text-white/25"
-                  />
+                  <div className="relative w-full pb-0.5">
+                    <input
+                      type="text"
+                      name="location"
+                      value={formData.location}
+                      onChange={handleChange}
+                      placeholder="e.g. West Enclave"
+                      className="w-full appearance-none rounded-none border-0 border-b border-white/20 focus:border-[#c9a96e] bg-transparent py-1.5 text-xs sm:text-sm text-white placeholder:text-white/30 outline-none transition-colors duration-300 font-sans"
+                    />
+                    <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#c9a96e] transition-all duration-300 group-focus-within:w-full" />
+                  </div>
                 </div>
 
               </div>
 
-              {/* ── 5. Newly Designed Clean Action Button ── */}
-              <div
-                ref={buttonRef}
-                className="mt-8 xs:mt-12 sm:mt-16 lg:mt-20 flex flex-col items-center justify-center text-center w-full mx-auto will-change-transform px-2"
-              >
+              {/* ── ROW 3: REASON FOR INQUIRY / INVESTMENT (Full Width) ── */}
+              <div className="inquiry-field-row relative flex flex-col group w-full">
+                <label className="text-[10px] sm:text-[11px] font-mono tracking-[0.16em] uppercase text-[#c9a96e] mb-1 font-semibold">
+                  REASON FOR INQUIRY / INVESTMENT
+                </label>
+                <div className="relative w-full pb-0.5">
+                  <input
+                    type="text"
+                    name="reason"
+                    value={formData.reason}
+                    onChange={handleChange}
+                    placeholder="e.g. Primary residence, retreat, portfolio..."
+                    className="w-full appearance-none rounded-none border-0 border-b border-white/20 focus:border-[#c9a96e] bg-transparent py-1.5 text-xs sm:text-sm text-white placeholder:text-white/30 outline-none transition-colors duration-300 font-sans"
+                  />
+                  <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#c9a96e] transition-all duration-300 group-focus-within:w-full" />
+                </div>
+              </div>
+
+              {/* ── ROW 4: SUBMIT BUTTON (Exact Gold Outline Rectangle Box) ── */}
+              <div className="inquiry-actions pt-4 sm:pt-6 flex items-center justify-center w-full">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full xs:w-auto max-w-xs xs:max-w-none px-6 xs:px-10 sm:px-16 py-3.5 sm:py-4 border border-[#c9a96e] bg-transparent text-[#c9a96e] hover:bg-[#c9a96e] hover:text-[#17171a] text-[11px] xs:text-xs sm:text-sm font-sans tracking-[0.22em] xs:tracking-[0.28em] uppercase transition-all duration-300 cursor-pointer disabled:opacity-50 active:scale-[0.99]"
+                  className="w-[130px] sm:w-[140px] h-[46px] sm:h-[50px] border border-[#c9a96e] bg-transparent text-[#c9a96e] hover:bg-[#c9a96e] hover:text-[#121215] text-xs sm:text-[13px] font-mono tracking-[0.24em] uppercase font-bold transition-all duration-300 cursor-pointer disabled:opacity-50 active:scale-[0.98] rounded-none flex items-center justify-center select-none"
                 >
                   {isSubmitting ? (
-                    <span className="flex items-center justify-center gap-2.5">
-                      <span className="w-3.5 h-3.5 rounded-full border-2 border-current border-t-transparent animate-spin" />
-                      <span>PROCESSING INQUIRY...</span>
-                    </span>
+                    <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
                   ) : (
-                    <span>SEND INVESTMENT INQUIRY</span>
+                    <span>SUBMIT</span>
                   )}
                 </button>
               </div>
 
             </form>
           )}
+
+        </div>
+      </div>
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          RIGHT / BOTTOM PARTITION: Architectural Image with Top-Right Badge
+      ═══════════════════════════════════════════════════════════════════ */}
+      <div
+        ref={rightColRef}
+        className="w-full min-h-[420px] xs:min-h-[480px] sm:min-h-[540px] lg:min-h-full relative overflow-hidden bg-[#0a0a0c] will-change-transform"
+      >
+        {/* Full Bleed Parallax Image Container */}
+        <div className="absolute inset-0 w-full h-[120%] -top-[10%] overflow-hidden">
+          <img
+            ref={parallaxImgRef}
+            src={ESTATE_IMAGE}
+            alt="First Key Housing Estate Luxury Villa Architecture"
+            className="w-full h-full object-cover object-center will-change-transform filter brightness-100 contrast-105"
+          />
         </div>
 
+        {/* Top-Right Architectural Stamp matching reference image */}
+        <div className="absolute top-5 right-5 z-20 px-3 py-1 bg-[#1a1814]/80 backdrop-blur-sm border border-[#c9a96e]/40 rounded-none text-[9px] sm:text-[10px] font-mono tracking-[0.2em] text-[#c9a96e] uppercase font-bold">
+          ESTATE NO. 04 &bull; PRIVATE RESIDENCE
+        </div>
       </div>
+
     </section>
   );
 }
