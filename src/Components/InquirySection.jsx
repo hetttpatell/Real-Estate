@@ -223,34 +223,34 @@ export default function InquirySection() {
       className="relative w-full min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-[#121215] text-white border-t border-[#c9a96e]/20 overflow-hidden select-none"
     >
       {/* ═══════════════════════════════════════════════════════════════════
-          LEFT / TOP PARTITION: Form Container (Spacious Inset on Mobile)
+          LEFT / TOP PARTITION: Form Container (Consistent Edge Margins)
       ═══════════════════════════════════════════════════════════════════ */}
       <div
         ref={formCardRef}
-        className="w-full min-h-full flex flex-col justify-center items-center px-10 xs:px-12 sm:px-16 md:px-20 lg:px-12 xl:px-16 py-18 sm:py-24 bg-[#121215] relative z-10"
+        className="w-full min-h-full flex flex-col justify-center items-center px-8 xs:px-10 sm:px-14 md:px-16 lg:px-10 xl:px-14 py-12 xs:py-14 sm:py-18 lg:py-24 bg-[#121215] relative z-10"
       >
-        {/* Centered Form Wrapper with Extra Margin Inset */}
-        <div className="w-full max-w-[360px] xs:max-w-[400px] sm:max-w-[480px] mx-auto flex flex-col items-center justify-center">
+        {/* Centered Form Wrapper with Generous Side Padding from Screen Edges */}
+        <div className="w-full max-w-[320px] xs:max-w-[360px] sm:max-w-[440px] md:max-w-[480px] lg:max-w-[460px] xl:max-w-[500px] mx-auto flex flex-col items-center justify-center">
 
           {/* 1. Symmetrical Eyebrow Tag: — FIRSTKEY HOUSING ESTATE — */}
-          <div className="inquiry-eyebrow flex items-center justify-center gap-3 mb-3.5 sm:mb-4">
-            <span className="w-6 sm:w-8 h-[1.5px] bg-[#c9a96e]" />
-            <span className="text-[10px] sm:text-xs font-mono tracking-[0.24em] text-[#c9a96e] uppercase font-bold text-center">
+          <div className="inquiry-eyebrow flex items-center justify-center gap-2 xs:gap-3 mb-2.5 xs:mb-3 sm:mb-4 w-full">
+            <span className="w-4 xs:w-6 sm:w-8 h-[1.5px] bg-[#c9a96e]" />
+            <span className="text-[9px] xs:text-[10px] sm:text-xs font-mono tracking-[0.2em] sm:tracking-[0.24em] text-[#c9a96e] uppercase font-bold text-center">
               FIRSTKEY HOUSING ESTATE
             </span>
-            <span className="w-6 sm:w-8 h-[1.5px] bg-[#c9a96e]" />
+            <span className="w-4 xs:w-6 sm:w-8 h-[1.5px] bg-[#c9a96e]" />
           </div>
 
           {/* 2. Headline: Discover 18th Century Rural Life In Penn. */}
-          <h2 className="inquiry-title text-2xl xs:text-3xl sm:text-[36px] lg:text-[40px] font-serif text-white tracking-tight font-normal leading-[1.18] mb-3 text-center max-w-md mx-auto">
+          <h2 className="inquiry-title text-[22px] xs:text-[26px] sm:text-[34px] lg:text-[38px] xl:text-[40px] font-serif text-white tracking-tight font-normal leading-[1.18] mb-2 xs:mb-2.5 sm:mb-3 text-center max-w-sm sm:max-w-md mx-auto">
             Discover 18th Century Rural Life In Penn.
           </h2>
 
           {/* 3. Subtitle: Exact 2-Line Reference Description */}
-          <p className="inquiry-subtitle text-xs sm:text-[13px] text-white/70 font-sans leading-relaxed mb-8 sm:mb-10 max-w-sm sm:max-w-md mx-auto text-center">
+          <p className="inquiry-subtitle text-[11px] xs:text-xs sm:text-[13px] text-white/70 font-sans leading-relaxed mb-6 xs:mb-7 sm:mb-9 max-w-xs xs:max-w-sm sm:max-w-md mx-auto text-center">
             A historic house museum celebrating pre-1750 fine art, architecture, and enduring regional narrative.
           </p>
-          <br /><br /><br />
+
           {isSubmitted ? (
             /* Success Feedback State */
             <div className="w-full py-10 px-6 border border-[#c9a96e]/30 bg-[#17171c]/90 rounded-none flex flex-col items-center text-center gap-4">
@@ -272,14 +272,14 @@ export default function InquirySection() {
               </button>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="w-full flex flex-col gap-6 sm:gap-7 items-center">
+            <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4.5 xs:gap-5 sm:gap-6 items-center">
 
               {/* ── 2 BY 2 GRID: NAME, PHONE, BUDGET, LOCATION ── */}
-              <div className="inquiry-field-row grid grid-cols-2 gap-x-5 sm:gap-x-8 gap-y-5 sm:gap-y-6 w-full">
+              <div className="inquiry-field-row grid grid-cols-2 gap-x-4 sm:gap-x-7 gap-y-4 xs:gap-y-5 sm:gap-y-6 w-full">
 
                 {/* 1. NAME * */}
-                <div className="relative flex flex-col group">
-                  <label className="text-[10px] sm:text-[11px] font-mono tracking-[0.16em] uppercase text-[#c9a96e] mb-1 flex items-center gap-1 font-semibold">
+                <div className="relative flex flex-col group min-w-0">
+                  <label className="text-[9.5px] xs:text-[10.5px] sm:text-[11px] font-mono tracking-[0.14em] sm:tracking-[0.16em] uppercase text-[#c9a96e] mb-1 flex items-center gap-1 font-semibold truncate">
                     NAME <span className="text-[#c9a96e] font-bold">*</span>
                   </label>
                   <div className="relative w-full pb-0.5">
@@ -290,15 +290,15 @@ export default function InquirySection() {
                       value={formData.name}
                       onChange={handleChange}
                       placeholder="Your full name"
-                      className="w-full appearance-none rounded-none border-0 border-b border-white/20 focus:border-[#c9a96e] bg-transparent py-1.5 text-xs sm:text-sm text-white placeholder:text-white/30 outline-none transition-colors duration-300 font-sans"
+                      className="w-full appearance-none rounded-none border-0 border-b border-white/20 focus:border-[#c9a96e] bg-transparent py-1.5 text-xs xs:text-[13px] sm:text-sm text-white placeholder:text-white/30 outline-none transition-colors duration-300 font-sans"
                     />
                     <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#c9a96e] transition-all duration-300 group-focus-within:w-full" />
                   </div>
                 </div>
 
                 {/* 2. PHONE * */}
-                <div className="relative flex flex-col group">
-                  <label className="text-[10px] sm:text-[11px] font-mono tracking-[0.16em] uppercase text-[#c9a96e] mb-1 flex items-center gap-1 font-semibold">
+                <div className="relative flex flex-col group min-w-0">
+                  <label className="text-[9.5px] xs:text-[10.5px] sm:text-[11px] font-mono tracking-[0.14em] sm:tracking-[0.16em] uppercase text-[#c9a96e] mb-1 flex items-center gap-1 font-semibold truncate">
                     PHONE <span className="text-[#c9a96e] font-bold">*</span>
                   </label>
                   <div className="relative w-full pb-0.5">
@@ -308,16 +308,16 @@ export default function InquirySection() {
                       required
                       value={formData.phone}
                       onChange={handleChange}
-                      placeholder="e.g. +1 (555) 234"
-                      className="w-full appearance-none rounded-none border-0 border-b border-white/20 focus:border-[#c9a96e] bg-transparent py-1.5 text-xs sm:text-sm text-white placeholder:text-white/30 outline-none transition-colors duration-300 font-sans"
+                      placeholder="+1 (555) 234"
+                      className="w-full appearance-none rounded-none border-0 border-b border-white/20 focus:border-[#c9a96e] bg-transparent py-1.5 text-xs xs:text-[13px] sm:text-sm text-white placeholder:text-white/30 outline-none transition-colors duration-300 font-sans"
                     />
                     <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#c9a96e] transition-all duration-300 group-focus-within:w-full" />
                   </div>
                 </div>
 
                 {/* 3. BUDGET */}
-                <div className="relative flex flex-col group">
-                  <label className="text-[10px] sm:text-[11px] font-mono tracking-[0.16em] uppercase text-[#c9a96e] mb-1 font-semibold">
+                <div className="relative flex flex-col group min-w-0">
+                  <label className="text-[9.5px] xs:text-[10.5px] sm:text-[11px] font-mono tracking-[0.14em] sm:tracking-[0.16em] uppercase text-[#c9a96e] mb-1 font-semibold truncate">
                     BUDGET
                   </label>
                   <div className="relative w-full pb-0.5">
@@ -326,16 +326,16 @@ export default function InquirySection() {
                       name="budget"
                       value={formData.budget}
                       onChange={handleChange}
-                      placeholder="e.g. $3M – $6M+"
-                      className="w-full appearance-none rounded-none border-0 border-b border-white/20 focus:border-[#c9a96e] bg-transparent py-1.5 text-xs sm:text-sm text-white placeholder:text-white/30 outline-none transition-colors duration-300 font-sans"
+                      placeholder="$3M – $6M+"
+                      className="w-full appearance-none rounded-none border-0 border-b border-white/20 focus:border-[#c9a96e] bg-transparent py-1.5 text-xs xs:text-[13px] sm:text-sm text-white placeholder:text-white/30 outline-none transition-colors duration-300 font-sans"
                     />
                     <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#c9a96e] transition-all duration-300 group-focus-within:w-full" />
                   </div>
                 </div>
 
                 {/* 4. LOCATION */}
-                <div className="relative flex flex-col group">
-                  <label className="text-[10px] sm:text-[11px] font-mono tracking-[0.16em] uppercase text-[#c9a96e] mb-1 font-semibold">
+                <div className="relative flex flex-col group min-w-0">
+                  <label className="text-[9.5px] xs:text-[10.5px] sm:text-[11px] font-mono tracking-[0.14em] sm:tracking-[0.16em] uppercase text-[#c9a96e] mb-1 font-semibold truncate">
                     LOCATION
                   </label>
                   <div className="relative w-full pb-0.5">
@@ -344,8 +344,8 @@ export default function InquirySection() {
                       name="location"
                       value={formData.location}
                       onChange={handleChange}
-                      placeholder="e.g. West Enclave"
-                      className="w-full appearance-none rounded-none border-0 border-b border-white/20 focus:border-[#c9a96e] bg-transparent py-1.5 text-xs sm:text-sm text-white placeholder:text-white/30 outline-none transition-colors duration-300 font-sans"
+                      placeholder="West Enclave"
+                      className="w-full appearance-none rounded-none border-0 border-b border-white/20 focus:border-[#c9a96e] bg-transparent py-1.5 text-xs xs:text-[13px] sm:text-sm text-white placeholder:text-white/30 outline-none transition-colors duration-300 font-sans"
                     />
                     <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#c9a96e] transition-all duration-300 group-focus-within:w-full" />
                   </div>
@@ -355,7 +355,7 @@ export default function InquirySection() {
 
               {/* ── ROW 3: REASON FOR INQUIRY / INVESTMENT (Full Width) ── */}
               <div className="inquiry-field-row relative flex flex-col group w-full">
-                <label className="text-[10px] sm:text-[11px] font-mono tracking-[0.16em] uppercase text-[#c9a96e] mb-1 font-semibold">
+                <label className="text-[9.5px] xs:text-[10.5px] sm:text-[11px] font-mono tracking-[0.14em] sm:tracking-[0.16em] uppercase text-[#c9a96e] mb-1 font-semibold">
                   REASON FOR INQUIRY / INVESTMENT
                 </label>
                 <div className="relative w-full pb-0.5">
@@ -364,19 +364,19 @@ export default function InquirySection() {
                     name="reason"
                     value={formData.reason}
                     onChange={handleChange}
-                    placeholder="e.g. Primary residence, retreat, portfolio..."
-                    className="w-full appearance-none rounded-none border-0 border-b border-white/20 focus:border-[#c9a96e] bg-transparent py-1.5 text-xs sm:text-sm text-white placeholder:text-white/30 outline-none transition-colors duration-300 font-sans"
+                    placeholder="Primary residence, retreat, portfolio..."
+                    className="w-full appearance-none rounded-none border-0 border-b border-white/20 focus:border-[#c9a96e] bg-transparent py-1.5 text-xs xs:text-[13px] sm:text-sm text-white placeholder:text-white/30 outline-none transition-colors duration-300 font-sans"
                   />
                   <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#c9a96e] transition-all duration-300 group-focus-within:w-full" />
                 </div>
               </div>
 
               {/* ── ROW 4: SUBMIT BUTTON (Exact Gold Outline Rectangle Box) ── */}
-              <div className="inquiry-actions pt-4 sm:pt-6 flex items-center justify-center w-full">
+              <div className="inquiry-actions pt-3 xs:pt-4 sm:pt-6 flex items-center justify-center w-full">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-[130px] sm:w-[140px] h-[46px] sm:h-[50px] border border-[#c9a96e] bg-transparent text-[#c9a96e] hover:bg-[#c9a96e] hover:text-[#121215] text-xs sm:text-[13px] font-mono tracking-[0.24em] uppercase font-bold transition-all duration-300 cursor-pointer disabled:opacity-50 active:scale-[0.98] rounded-none flex items-center justify-center select-none"
+                  className="w-[130px] sm:w-[140px] h-[44px] xs:h-[46px] sm:h-[50px] border border-[#c9a96e] bg-transparent text-[#c9a96e] hover:bg-[#c9a96e] hover:text-[#121215] text-xs sm:text-[13px] font-mono tracking-[0.22em] sm:tracking-[0.24em] uppercase font-bold transition-all duration-300 cursor-pointer disabled:opacity-50 active:scale-[0.98] rounded-none flex items-center justify-center select-none"
                 >
                   {isSubmitting ? (
                     <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
@@ -397,8 +397,11 @@ export default function InquirySection() {
       ═══════════════════════════════════════════════════════════════════ */}
       <div
         ref={rightColRef}
-        className="w-full min-h-[420px] xs:min-h-[480px] sm:min-h-[540px] lg:min-h-full relative overflow-hidden bg-[#0a0a0c] will-change-transform"
+        className="w-full h-[300px] xs:h-[360px] sm:h-[440px] lg:h-auto lg:min-h-full relative overflow-hidden bg-[#0a0a0c] will-change-transform"
       >
+        {/* Subtle top blend gradient on mobile */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#121215] via-transparent to-transparent lg:hidden z-10 pointer-events-none h-14" />
+
         {/* Full Bleed Parallax Image Container */}
         <div className="absolute inset-0 w-full h-[120%] -top-[10%] overflow-hidden">
           <img
@@ -410,7 +413,7 @@ export default function InquirySection() {
         </div>
 
         {/* Top-Right Architectural Stamp matching reference image */}
-        <div className="absolute top-5 right-5 z-20 px-3 py-1 bg-[#1a1814]/80 backdrop-blur-sm border border-[#c9a96e]/40 rounded-none text-[9px] sm:text-[10px] font-mono tracking-[0.2em] text-[#c9a96e] uppercase font-bold">
+        <div className="absolute top-3.5 right-3.5 xs:top-4 xs:right-4 sm:top-5 sm:right-5 z-20 px-2.5 sm:px-3 py-1 bg-[#1a1814]/85 backdrop-blur-sm border border-[#c9a96e]/40 rounded-none text-[8px] xs:text-[9px] sm:text-[10px] font-mono tracking-[0.18em] sm:tracking-[0.2em] text-[#c9a96e] uppercase font-bold">
           ESTATE NO. 04 &bull; PRIVATE RESIDENCE
         </div>
       </div>

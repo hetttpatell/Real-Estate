@@ -10,7 +10,6 @@ const BUILDING_IMAGE = "/Images/building iamge.webp";
 const CLOUD_IMAGE = "/Images/cloud.webp";
 const SMOKE_IMAGE = "/Images/smoke.webp";
 
-
 export default function Hero({ startEntrance = false }) {
   const pinWrapperRef = useRef(null);
   const stickyRef = useRef(null);
@@ -18,7 +17,7 @@ export default function Hero({ startEntrance = false }) {
   const headlineRef = useRef(null);
   const smokeTransitionRef = useRef(null);
 
-  // Multi-plane cloud ecosystem (13 depth layers)
+  // Multi-plane cloud ecosystem (Desktop uses all 13; Mobile uses 3 ultra-lightweight GPU layers)
   const cloudSkyTopLeftRef = useRef(null);
   const cloudSkyTopRightRef = useRef(null);
   const cloudTopCrownRef = useRef(null);
@@ -43,14 +42,14 @@ export default function Hero({ startEntrance = false }) {
         cloudLeftHighRef.current,
         cloudLeftLowRef.current,
         cloudFrontMidLeftRef.current,
-      ];
+      ].filter(Boolean);
 
       const rightClouds = [
         cloudSkyTopRightRef.current,
         cloudRightHighRef.current,
         cloudRightLowRef.current,
         cloudFrontMidRightRef.current,
-      ];
+      ].filter(Boolean);
 
       const centerClouds = [
         cloudTopCrownRef.current,
@@ -58,7 +57,7 @@ export default function Hero({ startEntrance = false }) {
         cloudMidCenterFlankRef.current,
         cloudFrontRooftopMistRef.current,
         cloudFrontBaseRef.current,
-      ];
+      ].filter(Boolean);
 
       // Initial state before entrance runs (hidden underneath loader on first visit)
       if (!startEntrance) {
@@ -199,20 +198,20 @@ export default function Hero({ startEntrance = false }) {
           gsap.set(smokeTransitionRef.current, { yPercent: 100, opacity: 0 });
         }
 
-        // ── 2. Pinned Scroll Parallax (Clouds stay visible, Smoke surges at ~90%) ──
+        // ── 2. Desktop Pinned Scroll Parallax ──
         const scrollTl = gsap.timeline({
           scrollTrigger: {
             trigger: pinWrapperRef.current,
             start: "top top",
             end: "bottom bottom",
             pin: stickyRef.current,
-            scrub: 0.7, // Snappier scrub for shorter scroll track
+            scrub: 0.7,
             anticipatePin: 1,
             invalidateOnRefresh: true,
           },
         });
 
-        // Building rises gently from resting position (68%) to (38%) while guaranteeing 100% opacity and alignment
+        // Building rises gently from resting position (68%) to (38%)
         scrollTl.fromTo(
           buildingRef.current,
           { xPercent: -50, yPercent: 68, opacity: 1 },
@@ -366,7 +365,7 @@ export default function Hero({ startEntrance = false }) {
           0
         );
 
-        // ── Smoke transition surges from bottom at 50% parallax to cover full screen ──
+        // Desktop smoke transition surges from bottom
         scrollTl.fromTo(
           smokeTransitionRef.current,
           { yPercent: 100, opacity: 0 },
@@ -379,8 +378,14 @@ export default function Hero({ startEntrance = false }) {
         );
       });
 
-      // ── Mobile Portrait View (< 768px) ──
+      // ── Mobile Portrait View (< 768px) - Lightweight & 60/120fps Smooth ──
       mm.add("(max-width: 767px)", () => {
+        const mobileClouds = [
+          cloudTopCrownRef.current,
+          cloudBackCenterRef.current,
+          cloudFrontBaseRef.current,
+        ].filter(Boolean);
+
         // ── 1. Mobile Entrance Animation (Only on first visit) ──
         if (isFirstVisitRef.current) {
           const entranceTl = gsap.timeline({
@@ -389,16 +394,16 @@ export default function Hero({ startEntrance = false }) {
             },
           });
 
-          // Building rises to mobile resting position (45%)
+          // Building rises gracefully to mobile resting position (46%)
           entranceTl.fromTo(
             buildingRef.current,
-            { xPercent: -50, yPercent: 85, opacity: 0 },
+            { xPercent: -50, yPercent: 80, opacity: 0 },
             {
               opacity: 1,
               xPercent: -50,
-              yPercent: 45,
-              duration: 1.4,
-              ease: "power3.out",
+              yPercent: 46,
+              duration: 1.2,
+              ease: "power2.out",
             },
             0
           );
@@ -406,186 +411,105 @@ export default function Hero({ startEntrance = false }) {
           // Headline & Tagline fade in
           entranceTl.fromTo(
             headlineRef.current,
-            { opacity: 0, y: -20, scale: 0.98 },
+            { opacity: 0, y: -15, scale: 0.98 },
             {
               opacity: 1,
               y: 0,
               scale: 1,
-              duration: 1.2,
+              duration: 1.0,
               ease: "power2.out",
-            },
-            0.15
-          );
-
-          // Clouds sweep in from sides on mobile
-          entranceTl.to(
-            leftClouds,
-            {
-              opacity: 0.32,
-              xPercent: 0,
-              duration: 1.4,
-              ease: "power2.out",
-              stagger: 0.04,
             },
             0.1
           );
 
-          entranceTl.to(
-            rightClouds,
-            {
-              opacity: 0.32,
-              xPercent: 0,
-              duration: 1.4,
-              ease: "power2.out",
-              stagger: 0.04,
-            },
-            0.1
-          );
-
-          entranceTl.to(
-            centerClouds,
+          // Essential mobile clouds fade in smoothly
+          entranceTl.fromTo(
+            mobileClouds,
+            { opacity: 0 },
             {
               opacity: 0.28,
-              scale: 1,
-              duration: 1.3,
+              duration: 1.1,
               ease: "power2.out",
-              stagger: 0.04,
+              stagger: 0.05,
             },
             0.15
           );
         } else {
           // Direct initialization on mobile refresh / revisit
-          gsap.set(buildingRef.current, { xPercent: -50, yPercent: 45, opacity: 1 });
+          gsap.set(buildingRef.current, { xPercent: -50, yPercent: 46, opacity: 1 });
           gsap.set(headlineRef.current, { opacity: 1, y: 0, scale: 1 });
-          gsap.set(leftClouds, { opacity: 0.32, xPercent: 0 });
-          gsap.set(rightClouds, { opacity: 0.32, xPercent: 0 });
-          gsap.set(centerClouds, { opacity: 0.28, scale: 1 });
+          gsap.set(mobileClouds, { opacity: 0.28, scale: 1 });
           gsap.set(smokeTransitionRef.current, { yPercent: 100, opacity: 0 });
         }
 
-        // ── 2. Mobile Scroll Parallax (Smoke surges at ~90%) ──
+        // ── 2. Mobile Scroll Parallax (Optimized for touch screens) ──
         const scrollTl = gsap.timeline({
           scrollTrigger: {
             trigger: pinWrapperRef.current,
             start: "top top",
             end: "bottom bottom",
             pin: stickyRef.current,
-            scrub: 0.4, // Snappy touch scrub
+            scrub: 0.5,
             anticipatePin: 1,
             invalidateOnRefresh: true,
           },
         });
 
-        // Building rises gently on scroll from 45% to 22%
+        // Building floats upward on mobile scroll
         scrollTl.fromTo(
           buildingRef.current,
-          { xPercent: -50, yPercent: 45, opacity: 1 },
+          { xPercent: -50, yPercent: 46, opacity: 1 },
           {
             xPercent: -50,
-            yPercent: 22,
+            yPercent: 24,
             opacity: 1,
             ease: "none",
           },
           0
         );
 
-        // Headline zooms forward on mobile
+        // Headline zooms forward gently
         scrollTl.fromTo(
           headlineRef.current,
           { opacity: 1, y: 0, scale: 1 },
           {
             opacity: 1,
             y: 0,
-            scale: 1.35,
+            scale: 1.22,
             ease: "none",
           },
           0
         );
 
-        // Mobile clouds drift & scale
-        scrollTl.fromTo(
-          [cloudSkyTopLeftRef.current, cloudSkyTopRightRef.current],
-          { scale: 1, yPercent: 0 },
-          {
-            scale: 1.2,
-            yPercent: -10,
-            ease: "none",
-          },
-          0
-        );
+        // Mobile clouds drift with ultra-low GPU overhead
+        if (cloudTopCrownRef.current) {
+          scrollTl.fromTo(
+            cloudTopCrownRef.current,
+            { scale: 1, yPercent: 0 },
+            { scale: 1.15, yPercent: -12, ease: "none" },
+            0
+          );
+        }
 
-        scrollTl.fromTo(
-          cloudTopCrownRef.current,
-          { scale: 1, yPercent: 0 },
-          {
-            scale: 1.3,
-            yPercent: -20,
-            ease: "none",
-          },
-          0
-        );
+        if (cloudBackCenterRef.current) {
+          scrollTl.fromTo(
+            cloudBackCenterRef.current,
+            { scale: 1 },
+            { scale: 1.12, ease: "none" },
+            0
+          );
+        }
 
-        scrollTl.fromTo(
-          [cloudLeftHighRef.current, cloudLeftLowRef.current],
-          { scale: 1, xPercent: 0, yPercent: 0 },
-          {
-            scale: 1.3,
-            xPercent: -10,
-            yPercent: -15,
-            ease: "none",
-          },
-          0
-        );
+        if (cloudFrontBaseRef.current) {
+          scrollTl.fromTo(
+            cloudFrontBaseRef.current,
+            { scale: 1, yPercent: 0 },
+            { scale: 1.2, yPercent: -18, ease: "none" },
+            0
+          );
+        }
 
-        scrollTl.fromTo(
-          [cloudRightHighRef.current, cloudRightLowRef.current],
-          { scale: 1, xPercent: 0, yPercent: 0 },
-          {
-            scale: 1.3,
-            xPercent: 10,
-            yPercent: -15,
-            ease: "none",
-          },
-          0
-        );
-
-        scrollTl.fromTo(
-          [cloudBackCenterRef.current, cloudMidCenterFlankRef.current],
-          { scale: 1 },
-          {
-            scale: 1.2,
-            ease: "none",
-          },
-          0
-        );
-
-        scrollTl.fromTo(
-          [
-            cloudFrontMidLeftRef.current,
-            cloudFrontMidRightRef.current,
-            cloudFrontRooftopMistRef.current,
-          ],
-          { scale: 1, yPercent: 0 },
-          {
-            scale: 1.35,
-            yPercent: -22,
-            ease: "none",
-          },
-          0
-        );
-
-        scrollTl.fromTo(
-          cloudFrontBaseRef.current,
-          { scale: 1, yPercent: 0 },
-          {
-            scale: 1.4,
-            yPercent: -25,
-            ease: "none",
-          },
-          0
-        );
-
-        // ── Mobile smoke transition surges from bottom at 50% parallax to cover full screen ──
+        // Mobile smoke transition surges from bottom cleanly
         scrollTl.fromTo(
           smokeTransitionRef.current,
           { yPercent: 100, opacity: 0 },
@@ -594,7 +518,7 @@ export default function Hero({ startEntrance = false }) {
             opacity: 1,
             ease: "power1.inOut",
           },
-          0.5
+          0.55
         );
       });
     },
@@ -604,7 +528,7 @@ export default function Hero({ startEntrance = false }) {
   return (
     <section
       ref={pinWrapperRef}
-      className="relative w-full h-[125vh] md:h-[160vh]"
+      className="relative w-full h-[130vh] md:h-[160vh]"
       id="hero"
     >
       {/* ── Sticky Viewport (100dvh for mobile address bar stability) ── */}
@@ -625,10 +549,10 @@ export default function Hero({ startEntrance = false }) {
         </div>
 
         {/* ── Layer 1: Background Cloud Planes (Behind Text & Building) ── */}
-        {/* Sky Top Left Ambient Cloud */}
+        {/* Sky Top Left Ambient Cloud (Desktop only) */}
         <div
           ref={cloudSkyTopLeftRef}
-          className="absolute left-[-15%] top-[2%] z-[1] w-[75vw] sm:w-[50vw] md:w-[42vw] max-w-[600px] pointer-events-none"
+          className="hidden md:block absolute left-[-15%] top-[2%] z-[1] w-[42vw] max-w-[600px] pointer-events-none transform-gpu will-change-transform"
           style={{
             filter: "blur(14px) brightness(1.2)",
             opacity: 0.25,
@@ -641,10 +565,10 @@ export default function Hero({ startEntrance = false }) {
           />
         </div>
 
-        {/* Sky Top Right Ambient Cloud */}
+        {/* Sky Top Right Ambient Cloud (Desktop only) */}
         <div
           ref={cloudSkyTopRightRef}
-          className="absolute right-[-15%] top-[1%] z-[1] w-[80vw] sm:w-[55vw] md:w-[45vw] max-w-[650px] pointer-events-none"
+          className="hidden md:block absolute right-[-15%] top-[1%] z-[1] w-[45vw] max-w-[650px] pointer-events-none transform-gpu will-change-transform"
           style={{
             filter: "blur(15px) brightness(1.22)",
             opacity: 0.26,
@@ -657,13 +581,12 @@ export default function Hero({ startEntrance = false }) {
           />
         </div>
 
-        {/* Rooftop Crown Cloud */}
+        {/* Rooftop Crown Cloud (Active Mobile & Desktop) */}
         <div
           ref={cloudTopCrownRef}
-          className="absolute left-[10%] sm:left-[28%] top-[14%] sm:top-[16%] z-[1] w-[80vw] sm:w-[55vw] md:w-[45vw] max-w-[550px] pointer-events-none"
+          className="absolute left-[10%] sm:left-[28%] top-[14%] sm:top-[16%] z-[1] w-[75vw] sm:w-[55vw] md:w-[45vw] max-w-[550px] pointer-events-none transform-gpu will-change-transform blur-xs md:blur-[10px]"
           style={{
-            filter: "blur(10px) brightness(1.25)",
-            opacity: 0.3,
+            opacity: 0.28,
           }}
         >
           <img
@@ -673,13 +596,12 @@ export default function Hero({ startEntrance = false }) {
           />
         </div>
 
-        {/* Deep Center Cloud */}
+        {/* Deep Center Cloud (Active Mobile & Desktop) */}
         <div
           ref={cloudBackCenterRef}
-          className="absolute left-1/2 -translate-x-1/2 top-[24%] sm:top-[28%] z-[1] w-[120vw] sm:w-[90vw] md:w-[80vw] max-w-[1000px] pointer-events-none origin-center"
+          className="absolute left-1/2 -translate-x-1/2 top-[24%] sm:top-[28%] z-[1] w-[110vw] sm:w-[90vw] md:w-[80vw] max-w-[1000px] pointer-events-none origin-center transform-gpu will-change-transform blur-xs md:blur-[11px]"
           style={{
-            filter: "blur(11px) brightness(1.2)",
-            opacity: 0.26,
+            opacity: 0.25,
           }}
         >
           <img
@@ -689,10 +611,10 @@ export default function Hero({ startEntrance = false }) {
           />
         </div>
 
-        {/* Mid Center Flank Cloud */}
+        {/* Mid Center Flank Cloud (Desktop only) */}
         <div
           ref={cloudMidCenterFlankRef}
-          className="absolute left-[12%] sm:left-[20%] top-[38%] sm:top-[42%] z-[1] w-[70vw] sm:w-[50vw] md:w-[40vw] max-w-[520px] pointer-events-none"
+          className="hidden md:block absolute left-[20%] top-[42%] z-[1] w-[40vw] max-w-[520px] pointer-events-none transform-gpu will-change-transform"
           style={{
             filter: "blur(13px) brightness(1.2)",
             opacity: 0.28,
@@ -705,10 +627,10 @@ export default function Hero({ startEntrance = false }) {
           />
         </div>
 
-        {/* Left Upper Flank */}
+        {/* Left Upper Flank (Desktop only) */}
         <div
           ref={cloudLeftHighRef}
-          className="absolute left-[-25%] sm:left-[-15%] top-[22%] sm:top-[26%] z-[1] w-[90vw] sm:w-[65vw] md:w-[55vw] max-w-[700px] pointer-events-none origin-left"
+          className="hidden md:block absolute left-[-15%] top-[26%] z-[1] w-[55vw] max-w-[700px] pointer-events-none origin-left transform-gpu will-change-transform"
           style={{
             filter: "blur(10px) brightness(1.2)",
             opacity: 0.32,
@@ -721,10 +643,10 @@ export default function Hero({ startEntrance = false }) {
           />
         </div>
 
-        {/* Right Upper Flank */}
+        {/* Right Upper Flank (Desktop only) */}
         <div
           ref={cloudRightHighRef}
-          className="absolute right-[-25%] sm:right-[-16%] top-[18%] sm:top-[23%] z-[1] w-[95vw] sm:w-[70vw] md:w-[60vw] max-w-[750px] pointer-events-none origin-right"
+          className="hidden md:block absolute right-[-16%] top-[23%] z-[1] w-[60vw] max-w-[750px] pointer-events-none origin-right transform-gpu will-change-transform"
           style={{
             filter: "blur(11px) brightness(1.25)",
             opacity: 0.3,
@@ -737,10 +659,10 @@ export default function Hero({ startEntrance = false }) {
           />
         </div>
 
-        {/* Left Low Flank */}
+        {/* Left Low Flank (Desktop only) */}
         <div
           ref={cloudLeftLowRef}
-          className="absolute left-[-20%] sm:left-[-10%] bottom-[12%] sm:bottom-[16%] z-[1] w-[100vw] sm:w-[75vw] md:w-[65vw] max-w-[800px] pointer-events-none origin-bottom-left"
+          className="hidden md:block absolute left-[-10%] bottom-[16%] z-[1] w-[65vw] max-w-[800px] pointer-events-none origin-bottom-left transform-gpu will-change-transform"
           style={{
             filter: "blur(11px) brightness(1.22)",
             opacity: 0.35,
@@ -753,10 +675,10 @@ export default function Hero({ startEntrance = false }) {
           />
         </div>
 
-        {/* Right Low Flank */}
+        {/* Right Low Flank (Desktop only) */}
         <div
           ref={cloudRightLowRef}
-          className="absolute right-[-20%] sm:right-[-12%] bottom-[8%] sm:bottom-[12%] z-[1] w-[105vw] sm:w-[78vw] md:w-[68vw] max-w-[850px] pointer-events-none origin-bottom-right"
+          className="hidden md:block absolute right-[-12%] bottom-[12%] z-[1] w-[68vw] max-w-[850px] pointer-events-none origin-bottom-right transform-gpu will-change-transform"
           style={{
             filter: "blur(12px) brightness(1.24)",
             opacity: 0.34,
@@ -772,14 +694,14 @@ export default function Hero({ startEntrance = false }) {
         {/* ── Layer 2: 3D Zooming Headline & Tagline (Sits behind building & in front of clouds) ── */}
         <div
           ref={headlineRef}
-          className="absolute top-[32%] xs:top-[30%] sm:top-[20%] md:top-[18%] left-0 right-0 z-[2] flex flex-col justify-center items-center text-center px-4 sm:px-8 pointer-events-none origin-center will-change-transform"
+          className="absolute top-[30%] xs:top-[28%] sm:top-[20%] md:top-[18%] left-0 right-0 z-[2] flex flex-col justify-center items-center text-center px-4 sm:px-8 pointer-events-none origin-center will-change-transform transform-gpu"
         >
-          <h1 className="font-sans font-black text-[3.2rem] xs:text-[3.8rem] sm:text-7xl md:text-8xl lg:text-[6rem] xl:text-[6.8rem] text-white tracking-tight leading-[0.98] sm:leading-none sm:whitespace-nowrap drop-shadow-[0_4px_30px_rgba(0,0,0,0.55)]">
+          <h1 className="font-sans font-black text-[2.85rem] xs:text-[3.4rem] sm:text-7xl md:text-8xl lg:text-[6rem] xl:text-[6.8rem] text-white tracking-tight leading-[1.02] sm:leading-none sm:whitespace-nowrap drop-shadow-[0_4px_24px_rgba(0,0,0,0.55)]">
             Unlock Your
             <br className="sm:hidden" /> Next Chapter
           </h1>
 
-          <p className="mt-4 sm:mt-5 text-[13px] xs:text-sm sm:text-base md:text-lg lg:text-xl font-medium tracking-wide max-w-xs xs:max-w-sm sm:max-w-none leading-relaxed drop-shadow-[0_2px_18px_rgba(0,0,0,0.65)]">
+          <p className="mt-3.5 sm:mt-5 text-[13px] xs:text-sm sm:text-base md:text-lg lg:text-xl font-medium tracking-wide max-w-xs xs:max-w-sm sm:max-w-none leading-relaxed drop-shadow-[0_2px_14px_rgba(0,0,0,0.65)]">
             <span className="text-white font-semibold block sm:inline">
               Curated spaces. Trusted advisors.
             </span>{" "}
@@ -792,22 +714,22 @@ export default function Hero({ startEntrance = false }) {
         {/* ── Layer 3: Skyscraper Building (Passes in front of the text on scroll for 3D overlap) ── */}
         <div
           ref={buildingRef}
-          className="absolute left-1/2 bottom-0 z-[3] w-[135vw] sm:w-[105vw] md:w-[78vw] lg:w-[62vw] max-w-[1150px] pointer-events-none will-change-transform"
+          className="absolute left-1/2 bottom-0 z-[3] w-[125vw] sm:w-[105vw] md:w-[78vw] lg:w-[62vw] max-w-[1150px] pointer-events-none will-change-transform transform-gpu"
         >
           <img
             src={BUILDING_IMAGE}
             alt="Luxury architectural residence"
-            className="w-full h-auto object-contain object-top drop-shadow-[0_25px_60px_rgba(0,0,0,0.45)]"
+            className="w-full h-auto object-contain object-top drop-shadow-[0_15px_35px_rgba(0,0,0,0.4)] md:drop-shadow-[0_25px_60px_rgba(0,0,0,0.45)]"
             loading="eager"
             decoding="sync"
           />
         </div>
 
         {/* ── Layer 4: Foreground Clouds (In Front of Both Building & Text) ── */}
-        {/* Floating Mid-Left Mist */}
+        {/* Floating Mid-Left Mist (Desktop only) */}
         <div
           ref={cloudFrontMidLeftRef}
-          className="absolute left-[-15%] sm:left-[8%] bottom-[20%] sm:bottom-[26%] z-[4] w-[80vw] sm:w-[55vw] md:w-[48vw] max-w-[580px] pointer-events-none origin-center"
+          className="hidden md:block absolute left-[8%] bottom-[26%] z-[4] w-[48vw] max-w-[580px] pointer-events-none origin-center transform-gpu will-change-transform"
           style={{
             filter: "blur(12px) brightness(1.3)",
             opacity: 0.28,
@@ -820,10 +742,10 @@ export default function Hero({ startEntrance = false }) {
           />
         </div>
 
-        {/* Floating Mid-Right Mist */}
+        {/* Floating Mid-Right Mist (Desktop only) */}
         <div
           ref={cloudFrontMidRightRef}
-          className="absolute right-[-15%] sm:right-[6%] bottom-[14%] sm:bottom-[20%] z-[4] w-[85vw] sm:w-[58vw] md:w-[50vw] max-w-[620px] pointer-events-none origin-center"
+          className="hidden md:block absolute right-[6%] bottom-[20%] z-[4] w-[50vw] max-w-[620px] pointer-events-none origin-center transform-gpu will-change-transform"
           style={{
             filter: "blur(13px) brightness(1.3)",
             opacity: 0.28,
@@ -836,10 +758,10 @@ export default function Hero({ startEntrance = false }) {
           />
         </div>
 
-        {/* Foreground Rooftop Garden Mist */}
+        {/* Foreground Rooftop Garden Mist (Desktop only) */}
         <div
           ref={cloudFrontRooftopMistRef}
-          className="absolute left-[20%] sm:left-[30%] bottom-[28%] sm:bottom-[34%] z-[4] w-[60vw] sm:w-[45vw] md:w-[38vw] max-w-[480px] pointer-events-none origin-center"
+          className="hidden md:block absolute left-[30%] bottom-[34%] z-[4] w-[38vw] max-w-[480px] pointer-events-none origin-center transform-gpu will-change-transform"
           style={{
             filter: "blur(14px) brightness(1.32)",
             opacity: 0.26,
@@ -852,13 +774,12 @@ export default function Hero({ startEntrance = false }) {
           />
         </div>
 
-        {/* Foreground Ground Base Fog */}
+        {/* Foreground Ground Base Fog (Active Mobile & Desktop) */}
         <div
           ref={cloudFrontBaseRef}
-          className="absolute left-1/2 -translate-x-1/2 bottom-[-6%] sm:bottom-[-2%] z-[4] w-[130vw] sm:w-[105vw] md:w-[95vw] max-w-[1200px] pointer-events-none origin-center"
+          className="absolute left-1/2 -translate-x-1/2 bottom-[-4%] sm:bottom-[-2%] z-[4] w-[120vw] sm:w-[105vw] md:w-[95vw] max-w-[1200px] pointer-events-none origin-center transform-gpu will-change-transform blur-xs md:blur-[14px]"
           style={{
-            filter: "blur(14px) brightness(1.35)",
-            opacity: 0.32,
+            opacity: 0.3,
           }}
         >
           <img
@@ -871,7 +792,7 @@ export default function Hero({ startEntrance = false }) {
         {/* ── Layer 5: Full-Screen Section Transition Smoke (Surges from bottom at 50% parallax) ── */}
         <div
           ref={smokeTransitionRef}
-          className="absolute inset-0 z-[10] w-full h-[100dvh] pointer-events-none translate-y-full will-change-transform"
+          className="absolute inset-0 z-[10] w-full h-[100dvh] pointer-events-none translate-y-full will-change-transform transform-gpu"
         >
           <img
             src={SMOKE_IMAGE}
